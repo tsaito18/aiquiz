@@ -7,7 +7,8 @@ import 'swiper/css/pagination';
 
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import QuizCard from './QuizCard';
+
+import QuizCard from '@/components/discover/QuizCard';
 
 export default function PickUp() {
   return (

@@ -1,7 +1,9 @@
+import './globals.css';
+
 import type { Metadata } from 'next';
 import { M_PLUS_1p } from 'next/font/google';
 import { ReactNode } from 'react';
-import './globals.css';
+
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 
