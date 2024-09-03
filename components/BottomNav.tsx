@@ -8,7 +8,7 @@ export default function BottomNav() {
   const path = usePathname();
 
   return (
-    <div className="btm-nav flex sm:hidden">
+    <div className="btm-nav flex bg-base-200 sm:hidden">
       {links.map((link) => (
         <Link
           key={link.name}
@@ -16,11 +16,14 @@ export default function BottomNav() {
           className={
             (link.to === '/' && path === '/') ||
             (link.to !== '/' && path.startsWith(link.to))
-              ? 'active'
+              ? 'active bg-base-200'
               : ''
           }
         >
           <link.icon className="h-5 w-5" />
+          <span className="btm-nav-label text-sm text-gray-600">
+            {link.name}
+          </span>
         </Link>
       ))}
     </div>

@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import Footer from '@/components/Footer';
 
 const mPlus1p = M_PLUS_1p({
   weight: ['400', '700'],
@@ -32,6 +33,7 @@ export default function RootLayout({
         <main className="mx-auto mb-auto mt-6 w-screen max-w-4xl px-4 sm:mt-24 lg:px-0">
           {children}
         </main>
+        <Footer />
         <BottomNav />
       </body>
     </html>
