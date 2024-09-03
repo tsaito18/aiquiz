@@ -27,7 +27,9 @@ export default function RootLayout({
     <html lang="ja-JP">
       <body className={`${mPlus1p.variable} font-sans`}>
         <Header />
-        {children}
+        <main className="mx-auto mb-auto mt-6 w-screen max-w-4xl px-4 sm:mt-24 lg:px-0">
+          {children}
+        </main>
         <BottomNav />
       </body>
     </html>

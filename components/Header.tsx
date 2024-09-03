@@ -39,7 +39,7 @@ export default function Header() {
           <Link href="/" className="btn btn-ghost text-xl normal-case">
             <Image
               src="/img/icon.webp"
-              alt="icon"
+              alt="ロゴ"
               width={40}
               height={40}
               className="rounded-full"
