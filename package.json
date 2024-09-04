@@ -7,8 +7,9 @@
 		"build": "next build",
 		"start": "next start",
 		"lint:eslint": "next lint",
-		"lint:prettier": "prettier --write --ignore-path .gitignore .",
-		"lint": "pnpm lint:next && pnpm lint:prettier"
+		"lint:prettier": "prettier --ignore-path .gitignore .",
+		"lint": "pnpm lint:next && pnpm lint:prettier --check",
+		"lintfix": "pnpm lint:next --fix && pnpm lint:prettier --write"
 	},
 	"dependencies": {
 		"next": "14.2.7",
