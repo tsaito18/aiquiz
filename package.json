@@ -12,10 +12,14 @@
 		"lintfix": "pnpm lint:eslint --fix && pnpm lint:prettier --write"
 	},
 	"dependencies": {
+		"embla-carousel": "8.2.1",
+		"embla-carousel-autoplay": "8.2.1",
+		"embla-carousel-react": "8.2.1",
 		"next": "14.2.7",
+		"next-auth": "5.0.0-beta.20",
+		"next-nprogress-bar": "2.3.13",
 		"react": "18.3.1",
-		"react-dom": "18.3.1",
-		"swiper": "^11.1.12"
+		"react-dom": "18.3.1"
 	},
 	"devDependencies": {
 		"@types/node": "22.5.3",

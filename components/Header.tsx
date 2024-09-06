@@ -6,6 +6,8 @@ import {
   FaCirclePlus,
   FaUser,
 } from 'react-icons/fa6';
+import LoginModal from './LoginModal';
+import LoginButton from './LoginButton';
 
 export const links = [
   {
@@ -56,6 +58,9 @@ export default function Header() {
               <span className="text-base font-normal">{link.name}</span>
             </Link>
           ))}
+
+          <LoginButton />
+          <LoginModal />
         </div>
       </div>
     </div>

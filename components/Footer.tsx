@@ -13,7 +13,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mb-16 mt-6 items-center bg-base-200 p-4 text-gray-600 sm:mb-0">
+    <footer className="mb-16 mt-6 bg-base-200 p-4 text-gray-600 sm:mb-0">
       <div className="footer mx-auto max-w-4xl gap-y-3">
         <div className="grid-flow-col">
           <p>©2024- Taiga Saito.</p>

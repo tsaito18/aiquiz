@@ -1,93 +1,13 @@
-import PickUp from '@/components/discover/PickUp';
+import { auth } from '@/auth';
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
     <>
-      <PickUp />
+      <p>Hello, World!</p>
 
-      <p>
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-        <br />
-        Hello, World!
-      </p>
+      <pre>Session: {JSON.stringify(session, null, 2)}</pre>
     </>
   );
 }

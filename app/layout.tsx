@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
+import Providers from '@/components/Providers';
 
 const mPlus1p = M_PLUS_1p({
   weight: ['400', '700'],
@@ -29,12 +30,16 @@ export default function RootLayout({
   return (
     <html lang="ja-JP">
       <body className={`${mPlus1p.variable} font-sans`}>
-        <Header />
-        <main className="mx-auto mb-auto mt-6 w-screen max-w-4xl px-4 sm:mt-24 lg:px-0">
-          {children}
-        </main>
-        <Footer />
-        <BottomNav />
+        <Providers>
+          <div className="flex h-svh flex-col justify-between">
+            <Header />
+            <main className="mx-auto mb-auto mt-6 w-screen max-w-4xl px-4 sm:mt-24 lg:px-0">
+              {children}
+            </main>
+            <Footer />
+            <BottomNav />
+          </div>
+        </Providers>
       </body>
     </html>
   );
