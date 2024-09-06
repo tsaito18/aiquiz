@@ -32,7 +32,7 @@ export default async function LoginModal() {
         </form>
 
         <div className="mt-6 flex gap-1.5">
-          <HiOutlineInformationCircle className="mt-0.5 size-4 text-gray-600" />
+          <HiOutlineInformationCircle className="mt-0.5 size-4 shrink-0 text-gray-600" />
           <p className="text-left text-sm text-gray-600">
             <Link
               href="/terms"
