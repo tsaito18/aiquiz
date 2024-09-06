@@ -2,6 +2,7 @@
   "name": "aiquiz",
   "version": "0.1.0",
   "private": true,
+	"type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "pnpm migrate && next build",
@@ -10,7 +11,7 @@
     "lint:eslint": "next lint",
     "lint:prettier": "prettier --ignore-path .eslintignore .",
     "lint": "pnpm lint:eslint && pnpm lint:prettier --check",
-    "lintfix": "pnpm lint:eslint --fix && pnpm lint:prettier --write"
+    "lintfix": "pnpm lint:eslint --fix && pnpm lint:prettier --write --list-different"
   },
   "dependencies": {
     "@vercel/postgres-kysely": "0.10.0",

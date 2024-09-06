@@ -9,6 +9,7 @@ import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
 import Providers from '@/components/Providers';
 import LoginModal from '@/components/LoginModal';
+import AuthHandler from '@/components/AuthHandler';
 
 const mPlus1p = M_PLUS_1p({
   weight: ['400', '700'],
@@ -40,7 +41,8 @@ export default function RootLayout({
             <Footer />
             <BottomNav />
 
-            {/* モーダル */}
+            {/* 共通 Component */}
+            <AuthHandler />
             <LoginModal />
           </div>
         </Providers>
