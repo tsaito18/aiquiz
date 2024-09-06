@@ -3,6 +3,7 @@ export interface UserAtom {
   isLoggedIn: boolean;
   userId: string;
   name: string;
+  avatar: string;
   googleId: string;
   email: string;
 }

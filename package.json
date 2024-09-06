@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm migrate && next build",
     "start": "next start",
+    "migrate": "kysely migrate:latest",
     "lint:eslint": "next lint",
     "lint:prettier": "prettier --ignore-path .eslintignore .",
     "lint": "pnpm lint:eslint && pnpm lint:prettier --check",
@@ -29,6 +30,7 @@
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.8",
     "eslint-config-prettier": "9.1.0",
+    "kysely-ctl": "0.9.0",
     "postcss": "8.4.45",
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "0.6.6",
