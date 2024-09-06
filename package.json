@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint:eslint": "next lint",
-    "lint:prettier": "prettier --ignore-path .gitignore .",
+    "lint:prettier": "prettier --ignore-path .eslintignore .",
     "lint": "pnpm lint:eslint && pnpm lint:prettier --check",
     "lintfix": "pnpm lint:eslint --fix && pnpm lint:prettier --write"
   },
