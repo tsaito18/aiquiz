@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# チャレンジ AI クイズ
 
-## Getting Started
+公開ホスティング: https://aiquiz.taigasaito.org
 
-First, run the development server:
+## 開発
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+※ Node.js v22.x と pnpm v9.x がインストールされていることが必要です
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. [`.env` の設定](#env-の設定)
+2. パッケージのインストール
+   ```
+   pnpm install
+   ```
+4. データベースの migration
+   ```
+   pnpm migrate
+   ```
+3. 開発サーバーの起動
+   ```
+   pnpm dev
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+開発サーバーが [http://localhost:3000] で起動します。
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## `.env` の設定
 
-## Learn More
+まず、`.env.example` のコピーを作成し、`.env` にリネームします。
 
-To learn more about Next.js, take a look at the following resources:
+次に、以下の説明を参考に値を書き込みます。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+|キー|説明|
+|-|-|
+|APP_URL|このアプリケーションを設置する URL。<br>`http(s)?://` を含め、末尾にスラッシュは含めない。|
+|AUTH_GOOGLE_ID<br>AUTH_GOOGLE_SECRET|Google アカウントでの OAuth で使用。<br>Google cloud console よりクライアント ID とシークレットを取得する。|
+|AUTH_SECRET|Auth.js 用のシークレット。<br>JWT の署名などに使用されるため、ランダムな文字列が好ましい。|
+|GEMINI_API_KEY|Gemini の API キー。<br>Google AI Studio より取得する。|
+|POSTGRES_URL|PostgreSQL へ接続するための URL。|
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## ライセンス
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+ソースコードは MIT ライセンスの下で利用可能です。
