@@ -1,6 +1,5 @@
-'use server';
-
 import AnswerButtons from '@/components/play/AnswerButtons';
+import ExplanationModal from '@/components/play/ExplanationModal';
 import { Question } from '@/interfaces/question';
 // import { useState } from 'react';
 
@@ -32,7 +31,9 @@ export default async function QuizPlayPage({
 
       {/* ToDo: 時間制限を追加 */}
 
-      <AnswerButtons answers={questions[0].answers} />
+      <AnswerButtons question={questions[0]} />
+
+      <ExplanationModal TorF={true} answer="正解" explanation="正解はこちら" />
     </div>
   );
 }

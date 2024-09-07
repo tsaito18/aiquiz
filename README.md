@@ -11,11 +11,11 @@
    ```
    pnpm install
    ```
-4. データベースの migration
+3. データベースの migration
    ```
    pnpm migrate
    ```
-3. 開発サーバーの起動
+4. 開発サーバーの起動
    ```
    pnpm dev
    ```
@@ -28,13 +28,13 @@
 
 次に、以下の説明を参考に値を書き込みます。
 
-|キー|説明|
-|-|-|
-|APP_URL|このアプリケーションを設置する URL。<br>`http(s)?://` を含め、末尾にスラッシュは含めない。|
-|AUTH_GOOGLE_ID<br>AUTH_GOOGLE_SECRET|Google アカウントでの OAuth で使用。<br>Google cloud console よりクライアント ID とシークレットを取得する。|
-|AUTH_SECRET|Auth.js 用のシークレット。<br>JWT の署名などに使用されるため、ランダムな文字列が好ましい。|
-|GEMINI_API_KEY|Gemini の API キー。<br>Google AI Studio より取得する。|
-|POSTGRES_URL|PostgreSQL へ接続するための URL。|
+| キー                                 | 説明                                                                                                        |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| APP_URL                              | このアプリケーションを設置する URL。<br>`http(s)?://` を含め、末尾にスラッシュは含めない。                  |
+| AUTH_GOOGLE_ID<br>AUTH_GOOGLE_SECRET | Google アカウントでの OAuth で使用。<br>Google cloud console よりクライアント ID とシークレットを取得する。 |
+| AUTH_SECRET                          | Auth.js 用のシークレット。<br>JWT の署名などに使用されるため、ランダムな文字列が好ましい。                  |
+| GEMINI_API_KEY                       | Gemini の API キー。<br>Google AI Studio より取得する。                                                     |
+| POSTGRES_URL                         | PostgreSQL へ接続するための URL。                                                                           |
 
 ## ライセンス
 
