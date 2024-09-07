@@ -1,6 +1,10 @@
 export interface Question {
   question: string;
   answers: {
+    0: {
+      text: string;
+      isAnswer: boolean;
+    };
     1: {
       text: string;
       isAnswer: boolean;
@@ -13,9 +17,6 @@ export interface Question {
       text: string;
       isAnswer: boolean;
     };
-    4: {
-      text: string;
-      isAnswer: boolean;
-    };
   };
+  explanation: string;
 }

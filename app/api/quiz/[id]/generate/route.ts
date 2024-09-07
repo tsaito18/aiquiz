@@ -1,5 +1,7 @@
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 
+export const revalidate = 0;
+
 export async function GET() {
   // request: Request,
   // { params: { id } }: { params: { id: string } },
@@ -7,7 +9,7 @@ export async function GET() {
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-flash',
     systemInstruction:
-      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、クイズの質問と、4つの選択肢を10セット作成してください。',
+      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、「クイズの質問・4つの選択肢・解説」のセットを10つ作成してください。',
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: {
@@ -19,6 +21,14 @@ export async function GET() {
             answers: {
               type: SchemaType.OBJECT,
               properties: {
+                0: {
+                  type: SchemaType.OBJECT,
+                  properties: {
+                    text: { type: SchemaType.STRING },
+                    isAnswer: { type: SchemaType.BOOLEAN },
+                  },
+                  required: ['text', 'isAnswer'],
+                },
                 1: {
                   type: SchemaType.OBJECT,
                   properties: {
@@ -43,19 +53,12 @@ export async function GET() {
                   },
                   required: ['text', 'isAnswer'],
                 },
-                4: {
-                  type: SchemaType.OBJECT,
-                  properties: {
-                    text: { type: SchemaType.STRING },
-                    isAnswer: { type: SchemaType.BOOLEAN },
-                  },
-                  required: ['text', 'isAnswer'],
-                },
               },
-              required: ['1', '2', '3', '4'],
+              required: ['0', '1', '2', '3'],
             },
+            explanation: { type: SchemaType.STRING },
           },
-          required: ['question', 'answers'],
+          required: ['question', 'answers', 'explanation'],
         },
       },
     },

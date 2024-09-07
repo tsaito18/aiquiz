@@ -49,7 +49,7 @@ export default async function LoginModal() {
             >
               プライバシーポリシー
             </Link>
-            に同意した上でログインしてください。
+            &nbsp;に同意した上でログインしてください。
           </p>
         </div>
       </div>
