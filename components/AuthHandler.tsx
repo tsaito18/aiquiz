@@ -38,9 +38,15 @@ export default function AuthHandler() {
     }
   }
 
-  useEffect(() => {
-    setUserData();
-  }, [/* session */]);
+  useEffect(
+    () => {
+      setUserData();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      /* session */
+    ],
+  );
 
   return null;
 }
