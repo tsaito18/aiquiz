@@ -1,19 +1,36 @@
+'use client';
+
 import AnswerButtons from '@/components/play/AnswerButtons';
 import ExplanationModal from '@/components/play/ExplanationModal';
 import { Question } from '@/interfaces/question';
+import { useEffect, useState } from 'react';
 // import { useState } from 'react';
 
 export const revalidate = 0;
 
-export default async function QuizPlayPage({
+export default function QuizPlayPage({
   params: { id },
 }: {
   params: { id: string };
 }) {
   // const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
 
-  const genAPI = await fetch(`${process.env.APP_URL}/api/quiz/${id}/generate`);
-  const questions: Question[] = await genAPI.json();
+  const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  async function generateQuestion() {
+    const genAPI = await fetch(`/api/quiz/${id}/generate`);
+    const questions = await genAPI.json();
+
+    setQuestions(questions);
+  }
+
+  useEffect(() => {
+    generateQuestion().then(() => {
+      setIsLoading(false);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // const questionSegment = segmenter.segment(questions[0].question);
   // const questionArr = Array.from(questionSegment);
@@ -21,6 +38,15 @@ export default async function QuizPlayPage({
   // setInterval(() => {
   //   setQuestion(question + questionArr.shift());
   // }, 100);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <span className="loading loading-ring size-16" />
+        <p className="text-xl">問題を作成しています...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -32,7 +58,6 @@ export default async function QuizPlayPage({
       {/* ToDo: 時間制限を追加 */}
 
       <AnswerButtons question={questions[0]} />
-
       <ExplanationModal TorF={true} answer="正解" explanation="正解はこちら" />
     </div>
   );

@@ -9,7 +9,7 @@ export async function GET() {
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-flash',
     systemInstruction:
-      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、「クイズの質問・4つの選択肢・解説」のセットを10つ作成してください。',
+      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、「クイズの質問・4つの選択肢・解説」のセットを5つ作成してください。',
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: {
