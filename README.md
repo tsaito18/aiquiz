@@ -20,7 +20,7 @@
    pnpm dev
    ```
 
-開発サーバーが [http://localhost:3000] で起動します。
+開発サーバーが http://localhost:3000 で起動します。
 
 ## `.env` の設定
 
