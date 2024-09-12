@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@google/generative-ai':
-        specifier: 0.17.1
-        version: 0.17.1
+        specifier: 0.19.0
+        version: 0.19.0
       '@vercel/postgres-kysely':
         specifier: 0.10.0
         version: 0.10.0(kysely@0.27.4)(utf-8-validate@6.0.4)
@@ -261,8 +261,8 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@google/generative-ai@0.17.1':
-    resolution: {integrity: sha512-TgWz02c5l2XJlEDys81UVat5+Qg9xqmYah7tQt6xlsBwFvzIFPz64aZFGd1av2sxT22NsssqLATjNsusAIJICA==}
+  '@google/generative-ai@0.19.0':
+    resolution: {integrity: sha512-iGf/62v3sTwtEJGJY6S5m7PfkglU8hi1URaxqIjiRg1OItV27xyc4aVeR0og8cDkZFkUlGZKv+23bJtT1QWFzQ==}
     engines: {node: '>=18.0.0'}
 
   '@humanwhocodes/config-array@0.11.14':
@@ -2257,7 +2257,7 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@google/generative-ai@0.17.1': {}
+  '@google/generative-ai@0.19.0': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
