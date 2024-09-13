@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="flex h-[75vh] flex-col items-center justify-center gap-4 text-center">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-4 text-center">
       <h1 className="text-5xl font-bold">404 Not Found</h1>
       <p className="text-xl text-gray-600">
         お探しのページが見つかりませんでした。
