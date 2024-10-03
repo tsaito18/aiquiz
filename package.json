@@ -14,7 +14,7 @@
     "lintfix": "pnpm lint:eslint --fix && pnpm lint:prettier --write --list-different"
   },
   "dependencies": {
-    "@google/generative-ai": "0.20.0",
+    "@google/generative-ai": "0.21.0",
     "@vercel/postgres-kysely": "0.10.0",
     "jotai": "2.10.0",
     "kysely": "0.27.4",
