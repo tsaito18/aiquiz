@@ -27,8 +27,8 @@ importers:
         specifier: 5.0.0-beta.22
         version: 5.0.0-beta.22(next@14.2.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       next-nprogress-bar:
-        specifier: 2.3.13
-        version: 2.3.13
+        specifier: 2.3.14
+        version: 2.3.14
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -1454,8 +1454,8 @@ packages:
       nodemailer:
         optional: true
 
-  next-nprogress-bar@2.3.13:
-    resolution: {integrity: sha512-eJQDvPSUwZ2yRyNKqAH6xTFI4RtIFvs+qtY8essTtfooyaxLGmkanEO7vL83U166bullMtVpixD6FQk5SQkhMw==}
+  next-nprogress-bar@2.3.14:
+    resolution: {integrity: sha512-r2zdo5SFakm1CSYLBo2/+9X2F5NRnbV/LI1b/Iu3mFLa9ln+Dlwx3vjJc3kVHI4i42jRC0an++obVHeWkYU6gA==}
 
   next@14.2.14:
     resolution: {integrity: sha512-Q1coZG17MW0Ly5x76shJ4dkC23woLAhhnDnw+DfTc7EpZSGuWrlsZ3bZaO8t6u1Yu8FVfhkqJE+U8GC7E0GLPQ==}
@@ -3667,7 +3667,7 @@ snapshots:
       next: 14.2.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
-  next-nprogress-bar@2.3.13:
+  next-nprogress-bar@2.3.14:
     dependencies:
       nprogress: 0.2.0
 
