@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 
-export const revalidate = 0;
+export const revalidate = false;
 
 export async function GET() {
   // request: Request,

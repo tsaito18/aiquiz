@@ -6,8 +6,6 @@ import { Question } from '@/interfaces/question';
 import { useEffect, useState } from 'react';
 // import { useState } from 'react';
 
-export const revalidate = 0;
-
 export default function QuizPlayPage({
   params: { id },
 }: {
@@ -58,7 +56,11 @@ export default function QuizPlayPage({
       {/* ToDo: 時間制限を追加 */}
 
       <AnswerButtons question={questions[0]} />
-      <ExplanationModal TorF={true} answer="正解" explanation="正解はこちら" />
+      <ExplanationModal
+        TorF={false}
+        answer={questions[0].explanation}
+        explanation={questions[0].explanation}
+      />
     </div>
   );
 }
