@@ -8,7 +8,7 @@ export default function ExplanationModal({
   TorF: boolean;
   answer: string;
   explanation: string;
-  }) {
+}) {
   return (
     <dialog id="explanation_modal" className="modal">
       <div className="modal-box">
