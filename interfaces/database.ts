@@ -4,6 +4,20 @@ export interface Database {
   user: UserTable;
 }
 
+export interface QuizTable {
+  quiz_id: string;
+  title: string;
+  description: string;
+  created_by: string;
+  prompt: string;
+  created_at: ColumnType<Date, string | undefined, never>;
+  updated_at: ColumnType<Date, string | undefined, never>;
+}
+
+export type Quiz = Selectable<QuizTable>;
+export type NewQuiz = Insertable<QuizTable>;
+export type QuizUpdate = Insertable<QuizTable>;
+
 export interface UserTable {
   user_id: string;
   name: string;

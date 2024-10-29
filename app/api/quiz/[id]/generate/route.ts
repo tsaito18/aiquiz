@@ -2,7 +2,7 @@ import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 
 export const revalidate = false;
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   // request: Request,
   // { params: { id } }: { params: { id: string } },
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);

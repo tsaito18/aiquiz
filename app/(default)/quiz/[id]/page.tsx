@@ -1,10 +1,21 @@
 import Link from 'next/link';
+import { db } from '@/database';
 
-export default function QuizDetailPage({
+export const revalidate = 60;
+
+export default async function QuizDetailPage({
   params: { id },
 }: {
   params: { id: string };
 }) {
+  const quizData = await db
+    .selectFrom('quiz')
+    .selectAll()
+    .where('quiz_id', '=', id)
+    .executeTakeFirst();
+
+  console.log("quizData", quizData);
+
   return (
     <>
       <p>
