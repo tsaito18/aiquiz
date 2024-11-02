@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        width="512"
+        height="512"
+        viewBox="0 0 512 512"
+        version="1.1"
+        id="svg1"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns="http://www.w3.org/2000/svg"
+>
+  <defs
+     id="defs1">
+    <rect
+       x="144"
+       y="211"
+       width="468.4407"
+       height="458.92596"
+       id="rect12" />
+    <linearGradient
+       id="linearGradient10">
+      <stop
+         style="stop-color:#ffdd57;stop-opacity:1;"
+         offset="0"
+         id="stop10" />
+      <stop
+         style="stop-color:#ff914c;stop-opacity:1;"
+         offset="1"
+         id="stop11" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient10"
+       id="linearGradient11"
+       x1="-0.10824107"
+       y1="-0.10824107"
+       x2="512.12524"
+       y2="512.13788"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     id="layer1">
+    <circle
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient11);stroke-width:35;stroke-dasharray:none;stroke-opacity:1"
+       id="path9"
+       cx="256"
+       cy="256"
+       r="238.5" />
+    <rect
+       style="fill:#ffa64f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       id="rect11"
+       width="262"
+       height="35"
+       x="250"
+       y="477"
+       ry="17.5" />
+    <text
+       xml:space="preserve"
+       id="text12"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:381.333px;font-family:Inter;-inkscape-font-specification:'Inter Medium';white-space:pre;shape-inside:url(#rect12);fill:#00bd62;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       transform="translate(-64.932504,-169.26159)"><tspan
+         x="144"
+         y="563.97925"
+         id="tspan1">AI</tspan></text>
+  </g>
+</svg>
