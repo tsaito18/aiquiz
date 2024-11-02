@@ -7,10 +7,16 @@ declare module 'next-auth' {
     user: {
       googleId: string;
     } & DefaultSession['user'];
+    account: {
+      userId: string;
+      name: string;
+      description: string;
+      avatar: string;
+    };
   }
 }
 
-import { JWT } from 'next-auth/jwt';
+import type { JWT } from 'next-auth/jwt';
 
 declare module 'next-auth/jwt' {
   interface JWT {

@@ -9,7 +9,7 @@ export async function GET() {
 
   console.log(session.user);
   const userData = await db
-    .selectFrom('user')
+    .selectFrom('users')
     .selectAll()
     .where('google_id', '=', session.user.googleId)
     .executeTakeFirst();
@@ -20,7 +20,7 @@ export async function GET() {
   } else {
     const newUserId = crypto.randomUUID();
     const newUser = await db
-      .insertInto('user')
+      .insertInto('users')
       .values({
         user_id: newUserId,
         name: session.user.name || '名無しさん',

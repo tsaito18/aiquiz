@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { FaMagnifyingGlass, FaCompass, FaCirclePlus } from 'react-icons/fa6';
 import { HeaderLoginButton } from './LoginButton';
 import { auth } from '@/auth';
+import AiquizLogo from '@/assets/logo.svg';
 
 export const links = [
   {
@@ -18,7 +19,7 @@ export const links = [
   {
     icon: FaCirclePlus,
     name: '作る',
-    to: '/contacts',
+    to: '/create',
   },
 ];
 
@@ -32,11 +33,11 @@ export default async function Header() {
         <div className="sm:flex-1">
           <Link href="/" className="btn btn-ghost text-xl normal-case">
             <Image
-              src="/img/icon.webp"
-              alt="ロゴ"
+              src={AiquizLogo}
+              alt="チャレンジ AI クイズのロゴ"
               width={40}
               height={40}
-              className="rounded-full"
+              className="mr-1"
             />
             <span className="text-2xl">チャレンジ AI クイズ</span>
           </Link>
