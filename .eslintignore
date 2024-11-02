@@ -36,5 +36,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# idea
+.idea
+
 # 以下は .eslintignore のみに追加
 pnpm-lock.yaml

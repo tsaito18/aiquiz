@@ -9,12 +9,12 @@ export default async function QuizDetailPage({
   params: { id: string };
 }) {
   const quizData = await db
-    .selectFrom('quiz')
+    .selectFrom('quizzes')
     .selectAll()
     .where('quiz_id', '=', id)
     .executeTakeFirst();
 
-  console.log("quizData", quizData);
+  console.log('quizData', quizData);
 
   return (
     <>
