@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 
-export const revalidate = false;
+export const revalidate = 0;
 
 export async function GET(): Promise<Response> {
   // request: Request,
@@ -9,7 +9,7 @@ export async function GET(): Promise<Response> {
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-flash',
     systemInstruction:
-      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、「クイズの質問・4つの選択肢・解説」のセットを5つ作成してください。',
+      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、「クイズの質問、4つの選択肢、解説」のセットを5つ作成してください。\nなお、クイズの選択肢は10文字以内におさめてください。',
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: {

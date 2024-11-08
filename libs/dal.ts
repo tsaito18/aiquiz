@@ -3,11 +3,13 @@ import 'server-only';
 import { cache } from 'react';
 import { db } from '@/database';
 import { auth } from '@/auth';
-import { User } from '@/interfaces/database';
+import { Session } from '@/interfaces/session';
 
-export const getUser = cache(async (): Promise<User | null> => {
+export const getSession = cache(async (): Promise<Session> => {
   const session = await auth();
-  if (!session) return null;
+  if (!session) {
+    return { isLoggedIn: false, user: null };
+  }
 
   try {
     const userData = await db
@@ -18,7 +20,7 @@ export const getUser = cache(async (): Promise<User | null> => {
     console.log(userData);
 
     if (userData) {
-      return userData;
+      return { isLoggedIn: true, user: userData };
     } else {
       const newUser = await db
         .insertInto('users')
@@ -32,10 +34,10 @@ export const getUser = cache(async (): Promise<User | null> => {
         .returningAll()
         .executeTakeFirst();
 
-      return newUser!;
+      return { isLoggedIn: true, user: newUser! };
     }
   } catch (error) {
     console.log('Failed to fetch user');
-    return null;
+    return { isLoggedIn: false, user: null };
   }
 });

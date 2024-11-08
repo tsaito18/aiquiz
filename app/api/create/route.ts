@@ -1,17 +1,22 @@
-import { auth } from '@/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/database';
+import { getSession } from '@/libs/dal';
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  console.log(session);
-  if (!session) {
-    return Response.json({error: "ログインしてください"}, { status: 401 });
+  const session = await getSession();
+  if (!session.isLoggedIn) {
+    return Response.json(
+      { error: 'クイズを作成するには、ログインする必要があります' },
+      { status: 401 },
+    );
   }
 
   const { title, description, prompt } = await req.json();
   if (!title || !description || !prompt) {
-    return NextResponse.json({error: "title, description, prompt は必須です"}, { status: 400 });
+    return NextResponse.json(
+      { error: 'title, description, prompt は必須です' },
+      { status: 400 },
+    );
   }
 
   const newQuiz = await db
@@ -20,7 +25,7 @@ export async function POST(req: NextRequest) {
       quiz_id: crypto.randomUUID(),
       title,
       description,
-      created_by: session.user.id!,
+      created_by: session.user?.user_id!,
       prompt,
     })
     .returning('quiz_id')
