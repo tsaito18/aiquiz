@@ -6,12 +6,12 @@ export async function POST(req: NextRequest) {
   const session = await auth();
   console.log(session);
   if (!session) {
-    return Response.error();
+    return Response.json({error: "ログインしてください"}, { status: 401 });
   }
 
   const { title, description, prompt } = await req.json();
   if (!title || !description || !prompt) {
-    return NextResponse.error();
+    return NextResponse.json({error: "title, description, prompt は必須です"}, { status: 400 });
   }
 
   const newQuiz = await db
