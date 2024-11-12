@@ -1,5 +1,6 @@
 'use client';
 
+import { Quiz } from '@/interfaces/database';
 import { Question } from '@/interfaces/question';
 import { useEffect, useState } from 'react';
 import {
@@ -13,7 +14,7 @@ import {
 
 export const revalidate = 0;
 
-export default function QuizPlayComponent({ id }: { id: string }) {
+export default function QuizPlayComponent({ id, quizData }: { id: string, quizData: Quiz }) {
   // 問題の状態
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -25,7 +26,7 @@ export default function QuizPlayComponent({ id }: { id: string }) {
   const [TorF, setTorF] = useState<boolean | null>(null);
 
   async function generateQuestion() {
-    const req = await fetch(`/api/quiz/${id}/generate`, {
+    const req = await fetch(`/api/quiz/generate?quiz_id=${id}`, {
       // cache: 'no-store',
     });
     const res = await req.json();
@@ -69,7 +70,7 @@ export default function QuizPlayComponent({ id }: { id: string }) {
     <>
       <div className="flex w-full flex-col items-center gap-3">
         <div className="flex w-full items-center justify-between">
-          <h1 className="text-xl font-bold">クイズタイトル</h1>
+          <h1 className="text-xl font-bold">{quizData.title}</h1>
           <button
             className="btn btn-circle"
             onClick={() => {

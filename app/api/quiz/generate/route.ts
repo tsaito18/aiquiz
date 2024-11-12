@@ -1,11 +1,24 @@
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
+import { db } from '@/database';
+import { NextRequest, NextResponse } from 'next/server';
 
 // export const revalidate = 0;
 export const revalidate = 3600;
 
-export async function GET(): Promise<Response> {
-  // request: Request,
-  // { params: { id } }: { params: { id: string } },
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  const searchParams = req.nextUrl.searchParams;
+  const quizId = searchParams.get('quiz_id');
+
+  const quizData = await db
+    .selectFrom('quizzes')
+    .selectAll()
+    .where('quiz_id', '=', quizId)
+    .executeTakeFirst();
+
+  if (!quizData) {
+    return NextResponse.json({error: "指定された ID のクイズは存在しません。"}, { status: 404 });
+  }
+
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-flash',
@@ -65,8 +78,8 @@ export async function GET(): Promise<Response> {
     },
   });
 
-  const prompt = '縄文時代に関する難しいクイズを作成してください。';
+  const prompt = quizData.prompt;
 
   const result = await model.generateContent(prompt);
-  return Response.json(JSON.parse(result.response.text()));
+  return NextResponse.json(JSON.parse(result.response.text()));
 }
