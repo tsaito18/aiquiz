@@ -24,6 +24,10 @@ export default function QuizPlayComponent({ id, quizData }: { id: string, quizDa
   // 設問ごとの状態
   const [questionNumber, setQuestionNumber] = useState(0);
   const [TorF, setTorF] = useState<boolean | null>(null);
+  const [remainingTime, setRemainingTime] = useState(100);
+  // ToDo: ↓
+  // eslint-disable-next-line no-undef
+  const [timeInterval, setTimeInterval] = useState<NodeJS.Timeout | null>(null);
 
   async function generateQuestion() {
     const req = await fetch(`/api/quiz/generate?quiz_id=${id}`, {
@@ -47,7 +51,20 @@ export default function QuizPlayComponent({ id, quizData }: { id: string, quizDa
   }
 
   function nextQuestion() {
+    if (timeInterval) {
+      clearInterval(timeInterval);
+    }
+
     setQuestionNumber(questionNumber + 1);
+
+    setRemainingTime(100);
+    setTimeInterval(setInterval(() => {
+      if (remainingTime <= 0) {
+        clearInterval(timeInterval!)
+      }
+
+      setRemainingTime(remainingTime - 1);
+    }, 10))
   }
 
   useEffect(() => {
@@ -106,6 +123,7 @@ export default function QuizPlayComponent({ id, quizData }: { id: string, quizDa
         <p className="text-xl">{questions[questionNumber].question}</p>
 
         {/* ToDo: 時間制限を追加 */}
+        <progress className="progress w-full" value={remainingTime} max="100"></progress>
 
         {/* 回答ボタン */}
         <div className="mt-5 flex w-full flex-col items-center gap-3">
