@@ -1,9 +1,9 @@
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import LoginModal from '@/components/LoginModal';
 import { getSession } from '@/libs/dal';
 import { ReactNode } from 'react';
-import LoginModal from '@/components/LoginModal';
 
 export default async function DefaultLayout({
   children,
