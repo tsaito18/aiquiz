@@ -2,16 +2,25 @@
 
 import InvalidAccess from '@/components/InvalidAccess';
 import { quizAtom } from '@/libs/atoms';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ResultPage() {
-  const quiz = useAtomValue(quizAtom);
+  const router = useRouter();
+
+  const [quiz, setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
 
   function playAgain() {
-    // ...
+    const quizId = quiz.quizId;
+    const title = quiz.title;
+
+    resetQuiz();
+    setQuiz((prev) => ({ ...prev, quizId, title, mode: 'play' }));
+
+    router.push('/play');
   }
 
   if (quiz.mode !== 'result' || !quiz.quizId || !quiz.title) {
