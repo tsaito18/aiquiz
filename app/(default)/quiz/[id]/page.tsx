@@ -24,7 +24,7 @@ export default async function QuizDetailPage({
 
   return (
     <>
-      <div className="flex h-[30svh] w-full items-center justify-center rounded-md bg-green-100">
+      <div className="flex h-[30svh] w-full items-center justify-center rounded-md bg-amber-100">
         <p className="text-3xl font-bold">{quizData.title}</p>
       </div>
 
