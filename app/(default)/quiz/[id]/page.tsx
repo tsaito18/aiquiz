@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { db } from '@/database';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 

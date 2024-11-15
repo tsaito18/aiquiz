@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { FaMagnifyingGlass, FaCompass, FaCirclePlus } from 'react-icons/fa6';
-import { HeaderLoginButton } from './LoginButton';
-import { auth } from '@/auth';
 import AiquizLogo from '@/assets/logo.svg';
+import { auth } from '@/auth';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaCirclePlus, FaCompass, FaMagnifyingGlass } from 'react-icons/fa6';
+import { HeaderLoginButton } from './LoginButton';
 
 export const links = [
   {

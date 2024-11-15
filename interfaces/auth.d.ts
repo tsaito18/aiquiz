@@ -16,7 +16,7 @@ declare module 'next-auth' {
   }
 }
 
-import type { JWT } from 'next-auth/jwt';
+import 'next-auth/jwt';
 
 declare module 'next-auth/jwt' {
   interface JWT {

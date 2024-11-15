@@ -14,7 +14,13 @@ import {
 
 export const revalidate = 0;
 
-export default function QuizPlayComponent({ id, quizData }: { id: string, quizData: Quiz }) {
+export default function QuizPlayComponent({
+  id,
+  quizData,
+}: {
+  id: string;
+  quizData: Quiz;
+}) {
   // 問題の状態
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -31,6 +37,7 @@ export default function QuizPlayComponent({ id, quizData }: { id: string, quizDa
 
   async function generateQuestion() {
     const req = await fetch(`/api/quiz/generate?quiz_id=${id}`, {
+      // ToDo: ↓本番環境ではキャッシュを無効にする
       // cache: 'no-store',
     });
     const res = await req.json();
@@ -58,13 +65,15 @@ export default function QuizPlayComponent({ id, quizData }: { id: string, quizDa
     setQuestionNumber(questionNumber + 1);
 
     setRemainingTime(100);
-    setTimeInterval(setInterval(() => {
+    const interval = setInterval(() => {
       if (remainingTime <= 0) {
-        clearInterval(timeInterval!)
+        clearInterval(timeInterval!);
       }
 
       setRemainingTime(remainingTime - 1);
-    }, 10))
+      console.log(remainingTime);
+    }, 10);
+    setTimeInterval(interval);
   }
 
   useEffect(() => {
@@ -123,7 +132,11 @@ export default function QuizPlayComponent({ id, quizData }: { id: string, quizDa
         <p className="text-xl">{questions[questionNumber].question}</p>
 
         {/* ToDo: 時間制限を追加 */}
-        <progress className="progress w-full" value={remainingTime} max="100"></progress>
+        <progress
+          className="progress w-full"
+          value={remainingTime}
+          max="100"
+        ></progress>
 
         {/* 回答ボタン */}
         <div className="mt-5 flex w-full flex-col items-center gap-3">

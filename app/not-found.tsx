@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { FaHouse } from 'react-icons/fa6';
 
 export const metadata: Metadata = {

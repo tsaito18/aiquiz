@@ -1,9 +1,9 @@
 import 'server-only';
 
-import { cache } from 'react';
-import { db } from '@/database';
 import { auth } from '@/auth';
+import { db } from '@/database';
 import { Session } from '@/interfaces/session';
+import { cache } from 'react';
 
 export const getSession = cache(async (): Promise<Session> => {
   const session = await auth();

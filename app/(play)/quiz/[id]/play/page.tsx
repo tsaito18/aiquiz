@@ -1,6 +1,8 @@
 import QuizPlayComponent from '@/app/(play)/quiz/[id]/play/component';
-import { db } from "@/database"
-import {notFound} from "next/navigation"
+import { db } from '@/database';
+import { notFound } from 'next/navigation';
+
+export const revalidate = 0;
 
 export default async function QuizPlayPage({
   params: { id },
@@ -13,9 +15,9 @@ export default async function QuizPlayPage({
     .where('quiz_id', '=', id)
     .executeTakeFirst();
 
-    if (!quizData) {
-      return notFound();
-    }
+  if (!quizData) {
+    return notFound();
+  }
 
   return <QuizPlayComponent id={id} quizData={quizData} />;
 }

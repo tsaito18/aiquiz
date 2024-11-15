@@ -1,5 +1,5 @@
-import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { db } from '@/database';
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
 // export const revalidate = 0;
@@ -16,7 +16,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     .executeTakeFirst();
 
   if (!quizData) {
-    return NextResponse.json({error: "指定された ID のクイズは存在しません。"}, { status: 404 });
+    return NextResponse.json(
+      { error: '指定された ID のクイズは存在しません。' },
+      { status: 404 },
+    );
   }
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
