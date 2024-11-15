@@ -1,7 +1,10 @@
 'use client';
 
-import { Quiz } from '@/interfaces/database';
+import InvalidAccess from '@/components/InvalidAccess';
 import { Question } from '@/interfaces/question';
+import { quizAtom } from '@/libs/atoms';
+import { useAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
 import { useEffect, useState } from 'react';
 import {
   FaArrowRight,
@@ -14,13 +17,12 @@ import {
 
 export const revalidate = 0;
 
-export default function QuizPlayComponent({
-  id,
-  quizData,
-}: {
-  id: string;
-  quizData: Quiz;
-}) {
+export default function PlayComponent() {
+  // ToDo: ↓
+  // eslint-disable-next-line no-unused-vars
+  const [quiz, _setQuiz] = useAtom(quizAtom);
+  const resetQuiz = useResetAtom(quizAtom);
+
   // 問題の状態
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -30,13 +32,9 @@ export default function QuizPlayComponent({
   // 設問ごとの状態
   const [questionNumber, setQuestionNumber] = useState(0);
   const [TorF, setTorF] = useState<boolean | null>(null);
-  const [remainingTime, setRemainingTime] = useState(100);
-  // ToDo: ↓
-  // eslint-disable-next-line no-undef
-  const [timeInterval, setTimeInterval] = useState<NodeJS.Timeout | null>(null);
 
   async function generateQuestion() {
-    const req = await fetch(`/api/quiz/generate?quiz_id=${id}`, {
+    const req = await fetch(`/api/quiz/generate?quiz_id=${quiz.quizId}`, {
       // ToDo: ↓本番環境ではキャッシュを無効にする
       // cache: 'no-store',
     });
@@ -46,46 +44,41 @@ export default function QuizPlayComponent({
   }
 
   function answerQuestion(number: number) {
-    setTorF(
-      questions[questionNumber].answers[number as 0 | 1 | 2 | 3].isAnswer,
-    );
+    const isCorrect =
+      questions[questionNumber].answers[number as 0 | 1 | 2 | 3].isAnswer;
+    setTorF(isCorrect);
 
-    setScore(score + 100);
-    setLife(3);
+    if (isCorrect) {
+      setScore(score + 100);
+    } else {
+      setLife(life - 1);
+    }
 
     // @ts-expect-error
     document.getElementById('explanation_modal')?.showModal();
   }
 
   function nextQuestion() {
-    if (timeInterval) {
-      clearInterval(timeInterval);
-    }
-
     setQuestionNumber(questionNumber + 1);
-
-    setRemainingTime(100);
-    const interval = setInterval(() => {
-      if (remainingTime <= 0) {
-        clearInterval(timeInterval!);
-      }
-
-      setRemainingTime(remainingTime - 1);
-      console.log(remainingTime);
-    }, 10);
-    setTimeInterval(interval);
   }
 
   useEffect(() => {
+    if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) return;
+
     generateQuestion().then(() => {
       setIsLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) {
+    resetQuiz();
+    return <InvalidAccess />;
+  }
+
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-y-3">
         <span className="loading loading-ring size-16" />
         <p className="text-xl">問題を作成しています...</p>
       </div>
@@ -96,7 +89,7 @@ export default function QuizPlayComponent({
     <>
       <div className="flex w-full flex-col items-center gap-3">
         <div className="flex w-full items-center justify-between">
-          <h1 className="text-xl font-bold">{quizData.title}</h1>
+          <h1 className="text-xl font-bold">{quiz.title}</h1>
           <button
             className="btn btn-circle"
             onClick={() => {
@@ -113,6 +106,7 @@ export default function QuizPlayComponent({
             <h2>Score</h2>
             <span className="text-xl font-bold">{score}</span>
           </div>
+
           <div className="w-full rounded-md bg-red-50 px-5 py-3 text-center">
             <h2>Life</h2>
             <div className="flex justify-center gap-x-1">
@@ -132,11 +126,7 @@ export default function QuizPlayComponent({
         <p className="text-xl">{questions[questionNumber].question}</p>
 
         {/* ToDo: 時間制限を追加 */}
-        <progress
-          className="progress w-full"
-          value={remainingTime}
-          max="100"
-        ></progress>
+        {/* <progress className="progress w-full" value={remainingTime} max="100" /> */}
 
         {/* 回答ボタン */}
         <div className="mt-5 flex w-full flex-col items-center gap-3">
@@ -152,69 +142,69 @@ export default function QuizPlayComponent({
             ),
           )}
         </div>
-
-        {/* 解説モーダル */}
-        <dialog
-          id="explanation_modal"
-          className="modal"
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              event.preventDefault();
-            }
-          }}
-        >
-          <div className="modal-box">
-            <h3 className="mt-1 flex items-center justify-center gap-3 text-lg font-bold">
-              {TorF ? (
-                <FaRegCircle className="size-8 text-green-500" />
-              ) : (
-                <FaXmark className="size-10 text-red-500" />
-              )}
-              <span className="text-3xl">{TorF ? '正解' : '不正解'}</span>
-            </h3>
-            <p className="py-4">
-              {
-                Object.values(questions[questionNumber].answers).find(
-                  (answer) => answer.isAnswer,
-                )?.text
-              }
-              <br />
-              {questions[questionNumber].explanation}
-            </p>
-
-            <div className="modal-action">
-              <form method="dialog" className="w-full">
-                <button
-                  type="submit"
-                  className="btn btn-block"
-                  onClick={nextQuestion}
-                >
-                  次の問題へ <FaArrowRight />
-                </button>
-              </form>
-            </div>
-          </div>
-        </dialog>
-
-        {/* メニュー */}
-        <dialog id="menu_modal" className="modal">
-          <div className="modal-box">
-            <button className="btn">記録してやめる</button>
-            <button className="btn">記録せずにやめる</button>
-
-            <div className="modal-action">
-              <form method="dialog" className="w-full">
-                <button type="submit" className="btn btn-block">
-                  とじる
-                </button>
-              </form>
-            </div>
-          </div>
-          <form method="dialog" className="modal-backdrop">
-            <button>とじる</button>
-          </form>
-        </dialog>
       </div>
+
+      {/* 解説モーダル */}
+      <dialog
+        id="explanation_modal"
+        className="modal"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+          }
+        }}
+      >
+        <div className="modal-box">
+          <h3 className="mt-1 flex items-center justify-center gap-3 text-lg font-bold">
+            {TorF ? (
+              <FaRegCircle className="size-8 text-green-500" />
+            ) : (
+              <FaXmark className="size-10 text-red-500" />
+            )}
+            <span className="text-3xl">{TorF ? '正解' : '不正解'}</span>
+          </h3>
+          <p className="py-4">
+            {
+              Object.values(questions[questionNumber].answers).find(
+                (answer) => answer.isAnswer,
+              )?.text
+            }
+            <br />
+            {questions[questionNumber].explanation}
+          </p>
+
+          <div className="modal-action">
+            <form method="dialog" className="w-full">
+              <button
+                type="submit"
+                className="btn btn-block"
+                onClick={nextQuestion}
+              >
+                次の問題へ <FaArrowRight />
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      {/* メニュー */}
+      <dialog id="menu_modal" className="modal">
+        <div className="modal-box">
+          <button className="btn">記録してやめる</button>
+          <button className="btn">記録せずにやめる</button>
+
+          <div className="modal-action">
+            <form method="dialog" className="w-full">
+              <button type="submit" className="btn btn-block">
+                とじる
+              </button>
+            </form>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>とじる</button>
+        </form>
+      </dialog>
     </>
   );
 }

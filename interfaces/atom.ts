@@ -1,9 +1,8 @@
-export interface UserAtom {
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  userId: string;
-  name: string;
-  avatar: string;
-  googleId: string;
-  email: string;
+export interface QuizAtom {
+  quizId: string | null;
+  title: string | null;
+  mode: 'ready' | 'play' | 'result';
+  score: number;
+  correctCount: number;
+  totalCount: number;
 }

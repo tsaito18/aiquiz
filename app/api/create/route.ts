@@ -2,6 +2,8 @@ import { db } from '@/database';
 import { getSession } from '@/libs/dal';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const revalidate = 0;
+
 export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session.isLoggedIn) {
@@ -10,6 +12,7 @@ export async function POST(req: NextRequest) {
       { status: 401 },
     );
   }
+  console.log(session);
 
   const { title, description, prompt } = await req.json();
   if (!title || !description || !prompt) {

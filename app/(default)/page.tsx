@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <>
       <p>Hello, World!</p>
-      <Link href="/quiz/ce71ee59-aabf-4726-be13-3dfda09cee24" className="btn">
-        Quiz ce71ee59-aabf-4726-be13-3dfda09cee24
+      <Link href="/quiz/75bd1b07-0e5d-4dca-bedc-b726025eca78" className="btn">
+        例）情報系クイズ
       </Link>
 
       {/* <pre>User atom: {JSON.stringify(user)}</pre> */}

@@ -3,15 +3,16 @@ import 'server-only';
 import { auth } from '@/auth';
 import { db } from '@/database';
 import { Session } from '@/interfaces/session';
-import { cache } from 'react';
 
-export const getSession = cache(async (): Promise<Session> => {
+export const getSession = /* cache( */ async (): Promise<Session> => {
   const session = await auth();
   if (!session) {
     return { isLoggedIn: false, user: null };
   }
+  console.log('session', session);
 
   try {
+    console.log(session.user);
     const userData = await db
       .selectFrom('users')
       .selectAll()
@@ -37,7 +38,7 @@ export const getSession = cache(async (): Promise<Session> => {
       return { isLoggedIn: true, user: newUser! };
     }
   } catch (error) {
-    console.log('Failed to fetch user');
+    // console.log('Failed to fetch user', error);
     return { isLoggedIn: false, user: null };
   }
-});
+}; /* ) */

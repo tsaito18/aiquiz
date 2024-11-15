@@ -1,5 +1,5 @@
+import QuizPlayButton from '@/components/QuizPlayButton';
 import { db } from '@/database';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 
@@ -61,9 +61,7 @@ export default async function QuizDetailPage({
         <span>ログインすると、自分のプレイデータを保存できます</span>
       </div>
 
-      <Link href={`/quiz/${id}/play`} className="btn">
-        Play
-      </Link>
+      <QuizPlayButton quizId={quizData.quiz_id} title={quizData.title} />
     </>
   );
 }
