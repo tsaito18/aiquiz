@@ -15,8 +15,6 @@ import {
   FaXmark,
 } from 'react-icons/fa6';
 
-export const revalidate = 0;
-
 export default function PlayComponent() {
   // ToDo: ↓
   // eslint-disable-next-line no-unused-vars
@@ -25,6 +23,7 @@ export default function PlayComponent() {
 
   // 問題の状態
   const [isLoading, setIsLoading] = useState(true);
+  const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(3);
@@ -38,9 +37,9 @@ export default function PlayComponent() {
       // ToDo: ↓本番環境ではキャッシュを無効にする
       // cache: 'no-store',
     });
-    const res = await req.json();
+    const res: Question[] = await req.json();
 
-    setQuestions(res);
+    setQuestions([...questions, ...res]);
   }
 
   function answerQuestion(number: number) {
@@ -58,8 +57,13 @@ export default function PlayComponent() {
     document.getElementById('explanation_modal')?.showModal();
   }
 
-  function nextQuestion() {
+  async function nextQuestion() {
     setQuestionNumber(questionNumber + 1);
+
+    if (questions.length - (questionNumber + 1) <= 3 && !isBackgroundLoading) {
+      setIsBackgroundLoading(true);
+      generateQuestion().then(() => setIsBackgroundLoading(false));
+    }
   }
 
   useEffect(() => {
