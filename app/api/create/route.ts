@@ -8,7 +8,10 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session.isLoggedIn) {
     return Response.json(
-      { error: 'クイズを作成するには、ログインする必要があります' },
+      {
+        success: false,
+        error: 'クイズを作成するには、ログインする必要があります。',
+      },
       { status: 401 },
     );
   }
@@ -17,7 +20,7 @@ export async function POST(req: NextRequest) {
   const { title, description, prompt } = await req.json();
   if (!title || !description || !prompt) {
     return NextResponse.json(
-      { error: 'title, description, prompt は必須です' },
+      { success: false, error: 'title, description, prompt は必須です。' },
       { status: 400 },
     );
   }

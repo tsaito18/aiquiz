@@ -6,12 +6,15 @@ import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function ResultPage() {
   const router = useRouter();
 
   const [quiz, setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   function playAgain() {
     const quizId = quiz.quizId;
@@ -22,6 +25,30 @@ export default function ResultPage() {
 
     router.push('/play');
   }
+
+  useEffect(() => {
+    if (quiz.mode !== 'result' || !quiz.quizId || !quiz.title) return;
+
+    fetch('/api/quiz/result', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quiz_id: quiz.quizId,
+        score: quiz.score,
+        correct_count: quiz.correctCount,
+        total_count: quiz.totalCount,
+      }),
+    })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (quiz.mode !== 'result' || !quiz.quizId || !quiz.title) {
     resetQuiz();
@@ -51,10 +78,17 @@ export default function ResultPage() {
       {/* ToDo: シェアボタン */}
 
       <div className="flex flex-col gap-y-3 mt-6 w-full max-w-sm">
-        <button onClick={playAgain} className="btn btn-primary btn-block">
+        <button
+          onClick={playAgain}
+          disabled={isLoading}
+          className="btn btn-primary btn-block"
+        >
           もういちど遊ぶ
         </button>
-        <Link href={`/quiz/${quiz.quizId}`} className="btn btn-block">
+        <Link
+          href={`/quiz/${quiz.quizId}`}
+          className={`btn btn-block ${isLoading ? 'btn-disabled' : ''}`}
+        >
           もどる
         </Link>
       </div>

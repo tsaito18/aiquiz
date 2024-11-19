@@ -17,7 +17,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   if (!quizData) {
     return NextResponse.json(
-      { error: '指定された ID のクイズは存在しません。' },
+      { success: false, error: '指定された ID のクイズは存在しません。' },
       { status: 404 },
     );
   }
