@@ -127,7 +127,7 @@ export default function PlayComponent() {
         }
 
         // 8s
-        return prev - 0.0625;
+        return prev - 0.125;
       });
     }, 10);
 
