@@ -15,6 +15,8 @@ export default function Home() {
         例）情報系クイズ
       </Link>
 
+      <div className="bg-amber-100 w-full h-10" />
+
       {/* <pre>User atom: {JSON.stringify(user)}</pre> */}
     </>
   );

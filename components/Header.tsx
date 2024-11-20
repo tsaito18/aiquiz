@@ -8,17 +8,17 @@ import { HeaderLoginButton } from './LoginButton';
 export const links = [
   {
     icon: FaCompass,
-    name: '見つける',
+    name: 'みつける',
     to: '/',
   },
   {
     icon: FaMagnifyingGlass,
-    name: '探す',
+    name: 'さがす',
     to: '/search',
   },
   {
     icon: FaCirclePlus,
-    name: '作る',
+    name: 'つくる',
     to: '/create',
   },
 ];
@@ -28,7 +28,7 @@ export default async function Header() {
 
   return (
     <div className="top-0 z-40 w-full bg-base-200 drop-shadow-md sm:fixed">
-      <div className="navbar mx-auto max-w-5xl justify-center">
+      <div className="navbar mx-auto max-w-4xl justify-center">
         {/* サイトタイトル */}
         <div className="sm:flex-1">
           <Link href="/" className="btn btn-ghost text-xl normal-case">

@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
       { status: 401 },
     );
   }
-  console.log(session);
 
   const { title, description, prompt } = await req.json();
   if (!title || !description || !prompt) {

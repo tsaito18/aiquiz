@@ -1,27 +1,45 @@
-import { FaMagnifyingGlass } from 'react-icons/fa6';
+import SearchField from '@/components/SearchField';
+import { db } from '@/database';
+import Link from 'next/link';
 
-export default function SearchPage() {
-  async function search(formData: FormData) {
-    'use server';
-
-    const query = formData.get('query') as string;
-
-    console.log('query', query);
-  }
+export default async function SearchPage({
+  searchParams: { q },
+}: {
+  searchParams: { q: string };
+}) {
+  const results = q
+    ? await db
+        .selectFrom('quizzes')
+        .where((eb) =>
+          eb.or([
+            eb('title', 'ilike', `%${q}%`),
+            eb('description', 'ilike', `%${q}%`),
+            eb('prompt', 'ilike', `%${q}%`),
+          ]),
+        )
+        .selectAll()
+        .execute()
+    : [];
 
   return (
     <>
-      <form action={search} className="join w-full">
-        <input
-          name="query"
-          className="input input-bordered join-item"
-          placeholder="検索したいことばを入力..."
-        />
-        <button type="submit" className="btn join-item">
-          <FaMagnifyingGlass className="size-4" />
-          検索
-        </button>
-      </form>
+      <SearchField />
+
+      {results.map((quiz) => {
+        return (
+          <Link key={quiz.quiz_id} href={`/quiz/${quiz.quiz_id}`}>
+            <div className="p-4 bg-gray-100 rounded-lg">
+              <h2>{quiz.title}</h2>
+              <p>{quiz.description}</p>
+            </div>
+          </Link>
+        );
+      })}
+
+      {!q && <p className="text-center">検索したいことばを入力してください</p>}
+      {q && results.length === 0 && (
+        <p className="text-center">検索結果がありませんでした</p>
+      )}
     </>
   );
 }

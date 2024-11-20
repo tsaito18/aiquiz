@@ -29,7 +29,7 @@ export default function ResultPage() {
   useEffect(() => {
     if (quiz.mode !== 'result' || !quiz.quizId || !quiz.title) return;
 
-    fetch('/api/quiz/result', {
+    fetch('/api/quiz/record', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

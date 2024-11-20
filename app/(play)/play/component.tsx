@@ -5,6 +5,7 @@ import { Question } from '@/interfaces/question';
 import { quizAtom } from '@/libs/atoms';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   FaArrowRight,
@@ -16,30 +17,54 @@ import {
 } from 'react-icons/fa6';
 
 export default function PlayComponent() {
-  // ToDo: ↓
-  // eslint-disable-next-line no-unused-vars
-  const [quiz, _setQuiz] = useAtom(quizAtom);
+  const router = useRouter();
+
+  const [quiz, setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
 
   // 問題の状態
-  const [isLoading, setIsLoading] = useState(true);
+  // ToDo: ↓
+  // eslint-disable-next-line no-unused-vars
+  const [isLoading, _setIsLoading] = useState(false);
   const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
-  const [questions, setQuestions] = useState<Question[]>([]);
+  // ToDo: ↓
+  const [questions, setQuestions] = useState<Question[]>([
+    {
+      question:
+        'テストの質問ああああああああああああああああああああああああああああああああ',
+      answers: {
+        0: { text: '選択肢 1', isAnswer: true },
+        1: { text: '選択肢 2', isAnswer: false },
+        2: { text: '選択肢 3', isAnswer: false },
+        3: { text: '選択肢 4', isAnswer: false },
+      },
+      explanation: 'テストの解説',
+    },
+  ]);
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(3);
 
   // 設問ごとの状態
+  // ToDo: ↓
   const [questionNumber, setQuestionNumber] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(100);
   const [TorF, setTorF] = useState<boolean | null>(null);
 
   async function generateQuestion() {
-    const req = await fetch(`/api/quiz/generate?quiz_id=${quiz.quizId}`, {
-      // ToDo: ↓本番環境ではキャッシュを無効にする
-      // cache: 'no-store',
-    });
-    const res: Question[] = await req.json();
+    try {
+      const req = await fetch(`/api/quiz/generate?quiz_id=${quiz.quizId}`, {
+        // ToDo: ↓本番環境ではキャッシュを無効にする
+        // cache: 'no-store',
+      });
+      const res: Question[] = await req.json();
 
-    setQuestions([...questions, ...res]);
+      setQuestions([...questions, ...res]);
+    } catch (err) {
+      console.error(err);
+      alert(
+        '問題の取得に失敗しました。AI (Gemini API) の負荷が高いことが原因であるため、しばらく待ってから再度お試しください。',
+      );
+    }
   }
 
   function answerQuestion(number: number) {
@@ -50,6 +75,7 @@ export default function PlayComponent() {
     if (isCorrect) {
       setScore(score + 100);
     } else {
+      setScore(score - 50);
       setLife(life - 1);
     }
 
@@ -64,14 +90,52 @@ export default function PlayComponent() {
       setIsBackgroundLoading(true);
       generateQuestion().then(() => setIsBackgroundLoading(false));
     }
+
+    // 1 文字ずつ表示する
+  }
+
+  function endQuiz(record = true) {
+    if (record) {
+      setQuiz((prev) => ({
+        ...prev,
+        mode: 'result',
+      }));
+      router.push('/result');
+    } else {
+      const quizId = quiz.quizId;
+
+      resetQuiz();
+      router.push(`/quiz/${quizId}`);
+    }
+  }
+
+  function closeMenu() {
+    // ToDo: タイマー再開処理など
+
+    // @ts-expect-error
+    document.getElementById('menu_modal')?.close();
   }
 
   useEffect(() => {
     if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) return;
 
-    generateQuestion().then(() => {
-      setIsLoading(false);
-    });
+    setInterval(() => {
+      setRemainingTime((prev) => {
+        if (prev <= 0) {
+          setLife(life - 1);
+          return 100;
+        }
+
+        // 8s
+        return prev - 0.0625;
+      });
+    }, 10);
+
+    // ToDo: ↓
+    // generateQuestion().then(() => {
+    //   nextQuestion();
+    //   setIsLoading(false);
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,7 +155,7 @@ export default function PlayComponent() {
 
   return (
     <>
-      <div className="flex w-full flex-col items-center gap-3">
+      <div className="mx-auto flex w-full flex-col items-center gap-3 min-h-svh max-w-md justify-center px-4 py-10">
         <div className="flex w-full items-center justify-between">
           <h1 className="text-xl font-bold">{quiz.title}</h1>
           <button
@@ -124,21 +188,25 @@ export default function PlayComponent() {
           </div>
         </div>
 
-        <p className="mt-5 text-3xl font-bold">Q.{questionNumber + 1}</p>
+        <p className="mt-12 text-3xl font-bold">Q.{questionNumber + 1}</p>
 
         {/* ToDo: 1文字ずつ表示されるようにする */}
-        <p className="text-xl">{questions[questionNumber].question}</p>
+        <p className="text-3xl mt-4">{questions[questionNumber].question}</p>
 
         {/* ToDo: 時間制限を追加 */}
-        {/* <progress className="progress w-full" value={remainingTime} max="100" /> */}
+        <progress
+          className="progress mt-8 progress-error w-full"
+          value={remainingTime}
+          max="100"
+        />
 
         {/* 回答ボタン */}
-        <div className="mt-5 flex w-full flex-col items-center gap-3">
+        <div className="mt-3 flex w-full flex-col items-center gap-y-3">
           {Object.values(questions[questionNumber].answers).map(
             (answer, index) => (
               <button
                 key={index}
-                className="btn btn-block h-auto max-w-md py-3 text-2xl"
+                className="btn btn-block h-auto py-3 text-2xl"
                 onClick={() => answerQuestion(index)}
               >
                 {answer.text}
@@ -193,20 +261,37 @@ export default function PlayComponent() {
 
       {/* メニュー */}
       <dialog id="menu_modal" className="modal">
-        <div className="modal-box">
-          <button className="btn">記録してやめる</button>
-          <button className="btn">記録せずにやめる</button>
+        <form
+          method="dialog"
+          className="w-full modal-box max-w-sm flex flex-col gap-y-3"
+        >
+          <button
+            type="submit"
+            onClick={() => endQuiz()}
+            className="btn btn-block"
+          >
+            記録してやめる
+          </button>
+          <button
+            type="submit"
+            onClick={() => endQuiz(false)}
+            className="btn btn-block"
+          >
+            記録せずにやめる
+          </button>
 
-          <div className="modal-action">
-            <form method="dialog" className="w-full">
-              <button type="submit" className="btn btn-block">
-                とじる
-              </button>
-            </form>
-          </div>
-        </div>
+          <button
+            type="submit"
+            onClick={closeMenu}
+            className="btn btn-block mt-6"
+          >
+            とじる
+          </button>
+        </form>
         <form method="dialog" className="modal-backdrop">
-          <button>とじる</button>
+          <button type="submit" onClick={closeMenu}>
+            とじる
+          </button>
         </form>
       </dialog>
     </>
