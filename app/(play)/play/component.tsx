@@ -23,9 +23,7 @@ export default function PlayComponent() {
   const resetQuiz = useResetAtom(quizAtom);
 
   // 問題の状態
-  // ToDo: ↓
-  // eslint-disable-next-line no-unused-vars
-  const [isLoading, _setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
   // ToDo: ↓
   const [questions, setQuestions] = useState<Question[]>([
@@ -41,13 +39,14 @@ export default function PlayComponent() {
       explanation: 'テストの解説',
     },
   ]);
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(3);
 
   // 設問ごとの状態
-  // ToDo: ↓
-  const [questionNumber, setQuestionNumber] = useState(0);
+  const [questionNumber, setQuestionNumber] = useState(-1);
   const [remainingTime, setRemainingTime] = useState(100);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [TorF, setTorF] = useState<boolean | null>(null);
 
   async function generateQuestion() {
@@ -68,6 +67,10 @@ export default function PlayComponent() {
   }
 
   function answerQuestion(number: number) {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
     const isCorrect =
       questions[questionNumber].answers[number as 0 | 1 | 2 | 3].isAnswer;
     setTorF(isCorrect);
@@ -91,6 +94,22 @@ export default function PlayComponent() {
       generateQuestion().then(() => setIsBackgroundLoading(false));
     }
 
+    setIntervalId(
+      setInterval(() => {
+        if (isMenuOpened) return;
+
+        setRemainingTime((prev) => {
+          if (prev <= 0) {
+            setLife(life - 1);
+            return 100;
+          }
+
+          // 8s
+          return prev - 0.125;
+        });
+      }, 10),
+    );
+
     // 1 文字ずつ表示する
   }
 
@@ -109,9 +128,14 @@ export default function PlayComponent() {
     }
   }
 
-  function closeMenu() {
-    // ToDo: タイマー再開処理など
+  function openMenu() {
+    setIsMenuOpened(true);
+    // @ts-expect-error
+    document.getElementById('menu_modal')?.showModal();
+  }
 
+  function closeMenu() {
+    setIsMenuOpened(false);
     // @ts-expect-error
     document.getElementById('menu_modal')?.close();
   }
@@ -119,17 +143,9 @@ export default function PlayComponent() {
   useEffect(() => {
     if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) return;
 
-    setInterval(() => {
-      setRemainingTime((prev) => {
-        if (prev <= 0) {
-          setLife(life - 1);
-          return 100;
-        }
-
-        // 8s
-        return prev - 0.125;
-      });
-    }, 10);
+    // ToDo: ↓消す
+    nextQuestion();
+    setIsLoading(false);
 
     // ToDo: ↓
     // generateQuestion().then(() => {
@@ -146,7 +162,7 @@ export default function PlayComponent() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center gap-y-3">
+      <div className="flex flex-col justify-center w-full h-svh items-center gap-y-3">
         <span className="loading loading-ring size-16" />
         <p className="text-xl">問題を作成しています...</p>
       </div>
@@ -158,13 +174,7 @@ export default function PlayComponent() {
       <div className="mx-auto flex w-full flex-col items-center gap-3 min-h-svh max-w-md justify-center px-4 py-10">
         <div className="flex w-full items-center justify-between">
           <h1 className="text-xl font-bold">{quiz.title}</h1>
-          <button
-            className="btn btn-circle"
-            onClick={() => {
-              // @ts-expect-error
-              document.getElementById('menu_modal')?.showModal();
-            }}
-          >
+          <button className="btn btn-circle" onClick={openMenu}>
             <FaBars className="size-6" />
           </button>
         </div>
