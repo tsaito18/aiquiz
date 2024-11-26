@@ -1,23 +1,28 @@
-'use client';
+import QuizList from '@/components/QuizList';
+import { db } from '@/database';
 
-import Link from 'next/link';
-
-// import { userAtom } from '@/atoms/user';
-// import { useAtomValue } from 'jotai';
-
-export default function Home() {
-  // const user = useAtomValue(userAtom);
+export default async function Home() {
+  const discover = await db
+    .selectFrom('quizzes as q')
+    .leftJoin('users as u', 'q.created_by', 'u.user_id')
+    .select([
+      'q.quiz_id as quiz_id',
+      'q.title as title',
+      'q.description as description',
+      'u.name as user.name',
+      'u.avatar as user.avatar',
+      'u.user_id as user.user_id',
+    ])
+    .execute();
 
   return (
     <>
-      <p>Hello, World!</p>
-      <Link href="/quiz/75bd1b07-0e5d-4dca-bedc-b726025eca78" className="btn">
-        例）情報系クイズ
-      </Link>
+      <div className="w-full flex items-center justify-center flex-col bg-amber-100 mb-5 rounded-md py-10 px-4">
+        <h1 className="font-bold text-3xl">チャレンジ AI クイズ</h1>
+        <p>AI によって作られた無限のクイズを解こう！</p>
+      </div>
 
-      <div className="bg-amber-100 w-full h-10" />
-
-      {/* <pre>User atom: {JSON.stringify(user)}</pre> */}
+      <QuizList data={discover} />
     </>
   );
 }

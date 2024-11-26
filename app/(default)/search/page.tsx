@@ -1,6 +1,6 @@
+import QuizList from '@/components/QuizList';
 import SearchField from '@/components/SearchField';
 import { db } from '@/database';
-import Link from 'next/link';
 
 export default async function SearchPage({
   searchParams: { q },
@@ -24,17 +24,7 @@ export default async function SearchPage({
   return (
     <>
       <SearchField />
-
-      {results.map((quiz) => {
-        return (
-          <Link key={quiz.quiz_id} href={`/quiz/${quiz.quiz_id}`}>
-            <div className="p-4 bg-gray-100 rounded-lg">
-              <h2>{quiz.title}</h2>
-              <p>{quiz.description}</p>
-            </div>
-          </Link>
-        );
-      })}
+      <QuizList data={results} />
 
       {!q && <p className="text-center">検索したいことばを入力してください</p>}
       {q && results.length === 0 && (
