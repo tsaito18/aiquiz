@@ -39,17 +39,16 @@ export default function PlayComponent() {
       explanation: 'テストの解説',
     },
   ]);
-  const [isMenuOpened, setIsMenuOpened] = useState(false);
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(3);
 
   // 設問ごとの状態
   const [questionNumber, setQuestionNumber] = useState(-1);
-  const [remainingTime, setRemainingTime] = useState(100);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [TorF, setTorF] = useState<boolean | null>(null);
 
   async function generateQuestion() {
+    if (!isLoading || !isBackgroundLoading) return;
+
     try {
       const req = await fetch(`/api/quiz/generate?quiz_id=${quiz.quizId}`, {
         // ToDo: ↓本番環境ではキャッシュを無効にする
@@ -61,16 +60,12 @@ export default function PlayComponent() {
     } catch (err) {
       console.error(err);
       alert(
-        '問題の取得に失敗しました。AI (Gemini API) の負荷が高いことが原因であるため、しばらく待ってから再度お試しください。',
+        '問題の取得に失敗しました。AI (Gemini API) の負荷が高いことが原因である可能性が高いです。しばらく待ってから再度お試しください。',
       );
     }
   }
 
   function answerQuestion(number: number) {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-
     const isCorrect =
       questions[questionNumber].answers[number as 0 | 1 | 2 | 3].isAnswer;
     setTorF(isCorrect);
@@ -94,22 +89,6 @@ export default function PlayComponent() {
       generateQuestion().then(() => setIsBackgroundLoading(false));
     }
 
-    setIntervalId(
-      setInterval(() => {
-        if (isMenuOpened) return;
-
-        setRemainingTime((prev) => {
-          if (prev <= 0) {
-            setLife(life - 1);
-            return 100;
-          }
-
-          // 8s
-          return prev - 0.125;
-        });
-      }, 10),
-    );
-
     // 1 文字ずつ表示する
   }
 
@@ -129,13 +108,11 @@ export default function PlayComponent() {
   }
 
   function openMenu() {
-    setIsMenuOpened(true);
     // @ts-expect-error
     document.getElementById('menu_modal')?.showModal();
   }
 
   function closeMenu() {
-    setIsMenuOpened(false);
     // @ts-expect-error
     document.getElementById('menu_modal')?.close();
   }
@@ -201,17 +178,14 @@ export default function PlayComponent() {
         <p className="mt-12 text-3xl font-bold">Q.{questionNumber + 1}</p>
 
         {/* ToDo: 1文字ずつ表示されるようにする */}
-        <p className="text-3xl mt-4">{questions[questionNumber].question}</p>
+        <div className="text-3xl overflow-y-auto w-full leading-snug h-28 flex items-center mt-4">
+          {questions[questionNumber].question}
+        </div>
 
         {/* ToDo: 時間制限を追加 */}
-        <progress
-          className="progress mt-8 progress-error w-full"
-          value={remainingTime}
-          max="100"
-        />
 
         {/* 回答ボタン */}
-        <div className="mt-3 flex w-full flex-col items-center gap-y-3">
+        <div className="mt-5 flex w-full flex-col items-center gap-y-3">
           {Object.values(questions[questionNumber].answers).map(
             (answer, index) => (
               <button

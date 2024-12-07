@@ -13,6 +13,7 @@ export default async function Home() {
       'u.avatar as user.avatar',
       'u.user_id as user.user_id',
     ])
+    .orderBy('q.play_count', 'desc')
     .execute();
 
   return (

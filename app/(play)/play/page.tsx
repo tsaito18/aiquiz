@@ -2,6 +2,6 @@ import PlayComponent from '@/app/(play)/play/component';
 
 // このページは noindex
 
-export default function PlayPage() {
+export default async function PlayPage() {
   return <PlayComponent />;
 }

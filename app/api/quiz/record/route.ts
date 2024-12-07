@@ -51,5 +51,13 @@ export async function POST(req: NextRequest) {
     })
     .execute();
 
+  await db
+    .updateTable('quizzes')
+    .set((eb) => ({
+      play_count: eb('play_count', '+', 1),
+    }))
+    .where('quiz_id', '=', quiz_id)
+    .execute();
+
   return Response.json({ success: true });
 }
