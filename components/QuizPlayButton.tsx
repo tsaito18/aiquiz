@@ -30,7 +30,7 @@ export default function QuizPlayButton({
   }
 
   return (
-    <button onClick={play} className="btn">
+    <button onClick={play} className="btn btn-primary btn-block">
       このクイズであそぶ
     </button>
   );

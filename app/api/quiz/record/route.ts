@@ -1,5 +1,5 @@
 import { db } from '@/database';
-import { getSession } from '@/libs/dal';
+import { getSession } from '@/libs/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {

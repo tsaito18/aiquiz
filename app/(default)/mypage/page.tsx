@@ -1,7 +1,7 @@
 import { signOut } from '@/auth';
 import QuizList from '@/components/QuizList';
 import { db } from '@/database';
-import { getSession } from '@/libs/dal';
+import { getSession } from '@/libs/auth';
 import Image from 'next/image';
 
 export default async function MyPage() {

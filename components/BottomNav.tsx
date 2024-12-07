@@ -1,6 +1,6 @@
 import BottomNavLinks from '@/components/BottomNavLinks';
 import { BottomLoginButton } from '@/components/LoginButton';
-import { getSession } from '@/libs/dal';
+import { getSession } from '@/libs/auth';
 
 export default async function BottomNav() {
   const session = await getSession();

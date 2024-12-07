@@ -1,7 +1,9 @@
+import CopyButton from '@/components/CopyButton';
 import QuizPlayButton from '@/components/QuizPlayButton';
 import { db } from '@/database';
+import { getSession } from '@/libs/auth';
 import { notFound } from 'next/navigation';
-import { FaArrowTrendUp } from 'react-icons/fa6';
+import { FaArrowTrendUp, FaPlay, FaXTwitter } from 'react-icons/fa6';
 
 export const revalidate = 60;
 
@@ -10,13 +12,32 @@ export default async function QuizDetailPage({
 }: {
   params: { id: string };
 }) {
+  const session = await getSession();
+
   const quizData = await db
-    .selectFrom('quizzes')
+    .selectFrom('quizzes as q')
     .where('quiz_id', '=', id)
-    .leftJoin('users', 'quizzes.created_by', 'users.user_id')
-    .selectAll()
+    .leftJoin('users as u', 'q.created_by', 'u.user_id')
+    .select([
+      'q.quiz_id as quiz_id',
+      'q.title as title',
+      'q.description as description',
+      'q.prompt as prompt',
+      'q.play_count as play_count',
+      'u.name as user.name',
+      'u.avatar as user.avatar',
+      'u.user_id as user.user_id',
+    ])
     .executeTakeFirst()
     .catch(() => null);
+
+  // const playLogs = session.isLoggedIn
+  //   ? await db
+  //       .selectFrom('play_logs')
+  //       .where('user_id', '=', session.user?.user_id!)
+  //       .selectAll()
+  //       .execute()
+  //   : null;
 
   if (!quizData) {
     return notFound();
@@ -24,41 +45,44 @@ export default async function QuizDetailPage({
 
   return (
     <>
-      <div className="flex h-[30svh] w-full items-center justify-center rounded-md bg-amber-100">
-        <p className="text-3xl font-bold">{quizData.title}</p>
+      <div className="flex h-[30svh] flex-col w-full items-center justify-center rounded-md bg-amber-100">
+        <h1 className="text-3xl font-bold">{quizData.title}</h1>
+        <p className="text-gray-700 mt-1">by {quizData['user.name']}</p>
+
+        <div className="flex mt-3 gap-1 items-center text-gray-700">
+          <FaPlay className="size-3" /> {quizData.play_count}{' '}
+          回プレイされています
+        </div>
       </div>
 
-      <h1 className="mt-5 text-4xl font-bold">{quizData.title}</h1>
+      <div className="flex mt-5 flex-col items-center">
+        <p className="mb-5">{quizData.description}</p>
 
-      <p>
-        QuizDetailPage
-        <br />
-        ID: {quizData.quiz_id}
-      </p>
-
-      {/* ToDo: user と quiz を区別させる必要がある */}
-      <p>
-        Created at: {quizData.created_at?.toLocaleString()}
-        <br />
-        Updated at: {quizData.updated_at?.toLocaleString()}
-      </p>
-
-      <p>
-        Created by: {quizData.name}
-        <br />
-        Title: {quizData.title}
-        <br />
-        Description: {quizData.description}
-        <br />
-        Prompt: {quizData.prompt}
-      </p>
-
-      <div className="w-full rounded-lg bg-blue-50">
-        <div className="flex gap-x-2">
-          <FaArrowTrendUp className="size-6 text-blue-500" />
-          <h2>自分のデータ</h2>
+        <div className="flex gap-2">
+          <a
+            href={`https://x.com/intent/tweet?text=${encodeURIComponent(`${quizData.title} | チャレンジAIクイズ`)}&url=${encodeURIComponent(`https://aiquiz.taigasaito.org/quiz/${quizData.quiz_id}`)}`}
+            target="_blank"
+            className="btn"
+          >
+            <FaXTwitter />
+            ポスト
+          </a>
+          <CopyButton
+            text={`https://aiquiz.taigasaito.org/quiz/${quizData.quiz_id}`}
+          />
         </div>
-        <span>ログインすると、自分のプレイデータを保存できます</span>
+      </div>
+
+      <div className="w-full py-2 mt-10 mb-5 px-4 rounded-lg bg-blue-50">
+        <div className="flex items-center gap-x-2">
+          <FaArrowTrendUp className="size-6 text-blue-500" />
+          <h2 className="font-bold text-lg">自分のデータ</h2>
+        </div>
+        {session.isLoggedIn ? (
+          <p>まだデータがありません</p>
+        ) : (
+          <p>ログインすると、自分のプレイデータを保存できます</p>
+        )}
       </div>
 
       <QuizPlayButton quizId={quizData.quiz_id} title={quizData.title} />
