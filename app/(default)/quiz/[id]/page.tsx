@@ -31,13 +31,17 @@ export default async function QuizDetailPage({
     .executeTakeFirst()
     .catch(() => null);
 
-  // const playLogs = session.isLoggedIn
-  //   ? await db
-  //       .selectFrom('play_logs')
-  //       .where('user_id', '=', session.user?.user_id!)
-  //       .selectAll()
-  //       .execute()
-  //   : null;
+  const playLogs = session.isLoggedIn
+    ? await db
+        .selectFrom('play_logs')
+        .where('user_id', '=', session.user?.user_id!)
+        .select((eb) => [
+          eb.fn.count('play_log_id').as('count'),
+          eb.fn.max('score').as('max_score'),
+          eb.fn.max('correct_count').as('max_correct_count'),
+        ])
+        .executeTakeFirst()
+    : null;
 
   if (!quizData) {
     return notFound();
@@ -73,13 +77,32 @@ export default async function QuizDetailPage({
         </div>
       </div>
 
-      <div className="w-full py-2 mt-10 mb-5 px-4 rounded-lg bg-blue-50">
+      <div className="w-full py-2 max-w-lg mx-auto mt-10 mb-5 px-4 rounded-lg bg-blue-50">
         <div className="flex items-center gap-x-2">
           <FaArrowTrendUp className="size-6 text-blue-500" />
           <h2 className="font-bold text-lg">自分のデータ</h2>
         </div>
         {session.isLoggedIn ? (
-          <p>まだデータがありません</p>
+          playLogs ? (
+            <div className="grid grid-cols-3">
+              <div>
+                プレイ回数:{' '}
+                <span className="font-bold text-2xl">{playLogs.count}</span>
+              </div>
+              <div>
+                ハイスコア:{' '}
+                <span className="font-bold text-2xl">{playLogs.max_score}</span>
+              </div>
+              <div>
+                最高正解数:{' '}
+                <span className="font-bold text-2xl">
+                  {playLogs.max_correct_count}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p>まだデータがありません</p>
+          )
         ) : (
           <p>ログインすると、自分のプレイデータを保存できます</p>
         )}

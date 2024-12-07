@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
       description,
       created_by: session.user?.user_id!,
       prompt,
+      play_count: 0,
     })
     .returning('quiz_id')
     .executeTakeFirst();

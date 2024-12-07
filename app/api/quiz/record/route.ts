@@ -15,7 +15,12 @@ export async function POST(req: NextRequest) {
   }
 
   const { quiz_id, score, correct_count, total_count } = await req.json();
-  if (!quiz_id || !score || !correct_count || !total_count) {
+  if (
+    typeof quiz_id === 'undefined' ||
+    typeof score === 'undefined' ||
+    typeof correct_count === 'undefined' ||
+    typeof total_count === 'undefined'
+  ) {
     return NextResponse.json(
       {
         success: false,
@@ -25,10 +30,9 @@ export async function POST(req: NextRequest) {
     );
   }
   if (
-    !isNaN(score) ||
-    !isNaN(correct_count) ||
-    !isNaN(total_count) ||
-    Number(score) < 0 ||
+    isNaN(score) ||
+    isNaN(correct_count) ||
+    isNaN(total_count) ||
     Number(correct_count) < 0 ||
     Number(total_count) < 0 ||
     Number(correct_count) > Number(total_count)

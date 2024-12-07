@@ -2,8 +2,8 @@ import { db } from '@/database';
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-// export const revalidate = 0;
-export const revalidate = 3600;
+export const revalidate = 0;
+// export const revalidate = 3600;
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const searchParams = req.nextUrl.searchParams;

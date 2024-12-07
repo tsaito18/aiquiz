@@ -19,7 +19,7 @@ export default async function Home() {
   return (
     <>
       <div className="w-full flex items-center justify-center flex-col bg-amber-100 mb-5 rounded-md py-10 px-4">
-        <h1 className="font-bold text-3xl">チャレンジ AI クイズ</h1>
+        <h1 className="font-bold mb-2 text-3xl">チャレンジ AI クイズ</h1>
         <p>AI によって作られた無限のクイズを解こう！</p>
       </div>
 

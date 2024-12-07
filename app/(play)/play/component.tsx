@@ -21,12 +21,13 @@ export default function PlayComponent() {
 
   const [quiz, setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
+  const [isEnded, setIsEnded] = useState(false);
 
   // 問題の状態
   const [isLoading, setIsLoading] = useState(true);
   const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
   // ToDo: ↓
-  const [questions, setQuestions] = useState<Question[]>([
+  const [questions, setQuestions] = useState<Question[]>([]); /*
     {
       question:
         'テストの質問ああああああああああああああああああああああああああああああああ',
@@ -38,7 +39,7 @@ export default function PlayComponent() {
       },
       explanation: 'テストの解説',
     },
-  ]);
+  */
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(3);
 
@@ -47,8 +48,6 @@ export default function PlayComponent() {
   const [TorF, setTorF] = useState<boolean | null>(null);
 
   async function generateQuestion() {
-    if (!isLoading || !isBackgroundLoading) return;
-
     try {
       const req = await fetch(`/api/quiz/generate?quiz_id=${quiz.quizId}`, {
         // ToDo: ↓本番環境ではキャッシュを無効にする
@@ -81,7 +80,7 @@ export default function PlayComponent() {
     document.getElementById('explanation_modal')?.showModal();
   }
 
-  async function nextQuestion() {
+  function nextQuestion() {
     setQuestionNumber(questionNumber + 1);
 
     if (questions.length - (questionNumber + 1) <= 3 && !isBackgroundLoading) {
@@ -93,6 +92,8 @@ export default function PlayComponent() {
   }
 
   function endQuiz(record = true) {
+    setIsEnded(true);
+
     if (record) {
       setQuiz((prev) => ({
         ...prev,
@@ -121,20 +122,25 @@ export default function PlayComponent() {
     if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) return;
 
     // ToDo: ↓消す
-    nextQuestion();
-    setIsLoading(false);
+    // nextQuestion();
+    // setIsLoading(false);
 
     // ToDo: ↓
-    // generateQuestion().then(() => {
-    //   nextQuestion();
-    //   setIsLoading(false);
-    // });
+    generateQuestion().then(() => {
+      nextQuestion();
+      setIsLoading(false);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) {
+  if (!isEnded && (quiz.mode !== 'play' || !quiz.quizId || !quiz.title)) {
     resetQuiz();
-    return <InvalidAccess />;
+
+    return (
+      <div className="flex justify-center w-full h-svh items-center">
+        <InvalidAccess />
+      </div>
+    );
   }
 
   if (isLoading) {
@@ -175,11 +181,13 @@ export default function PlayComponent() {
           </div>
         </div>
 
-        <p className="mt-12 text-3xl font-bold">Q.{questionNumber + 1}</p>
+        <p className="mt-8 text-3xl font-bold">Q.{questionNumber + 1}</p>
 
         {/* ToDo: 1文字ずつ表示されるようにする */}
-        <div className="text-3xl overflow-y-auto w-full leading-snug h-28 flex items-center mt-4">
-          {questions[questionNumber].question}
+        <div className="overflow-y-auto w-full h-28 flex items-center mt-4">
+          <p className="leading-snug text-2xl">
+            {questions[questionNumber].question}
+          </p>
         </div>
 
         {/* ToDo: 時間制限を追加 */}
