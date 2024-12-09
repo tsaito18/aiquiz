@@ -2,8 +2,7 @@ import { db } from '@/database';
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-// export const revalidate = 0;
-export const revalidate = 3600;
+export const revalidate = 0;
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const searchParams = req.nextUrl.searchParams;
@@ -29,9 +28,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     systemInstruction:
       'あなたはプロのクイズ作問者です。\n' +
       '今からクイズのトピックと難易度を指定するので、「クイズの質問、4つの選択肢、解説」のセットを5つ作成してください。\n' +
-      'なお、答えが複数できる質問やあいまいな質問は避け、クイズの選択肢は10文字以内におさめてください。\n\n' +
-      '「○○しやすい」や「○○と思われる」など、人によって受け取り方が変わるような主観的な問題も避けてください。\n\n' +
-      'また、クイズの質問は、他のクイズと被らないような独創的なものにしてください。',
+      'なお、答えが複数できる質問やあいまいな質問は避け、クイズの選択肢は10文字以内におさめてください。\n' +
+      '「○○しやすい」や「○○と思われる」など、人によって受け取り方が変わるような主観的な問題も避けてください。\n' +
+      'また、クイズの質問は、他のクイズと被らないような独創的なものにしてください。\n' +
+      'もちろんのこと、ハルシネーション等の間違いは絶対に避け、クイズの質問と解答は必ず全て正しいものにしてください。',
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: {
