@@ -41,6 +41,8 @@ export default function CreateQuizComponent() {
           </label>
           <input
             type="text"
+            min={3}
+            max={32}
             id="title"
             name="title"
             placeholder="例: 情報系クイズ (情報Ⅰ程度)"

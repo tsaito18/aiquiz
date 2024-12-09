@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FaLink } from 'react-icons/fa6';
 
 export default function CopyButton({ text }: { text: string }) {
   const [isCopied, setIsCopied] = useState(false);
@@ -24,7 +25,13 @@ export default function CopyButton({ text }: { text: string }) {
 
   return (
     <button onClick={copy} className="btn">
-      {isCopied ? 'コピーしました' : 'URL をコピー'}
+      {!isCopied ? (
+        <>
+          <FaLink className="size-4" /> URL をコピー
+        </>
+      ) : (
+        'コピーしました'
+      )}
     </button>
   );
 }

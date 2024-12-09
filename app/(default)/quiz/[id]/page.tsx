@@ -1,3 +1,4 @@
+import EditQuiz from '@/app/(default)/quiz/[id]/EditQuiz';
 import CopyButton from '@/components/CopyButton';
 import QuizPlayButton from '@/components/QuizPlayButton';
 import { db } from '@/database';
@@ -110,6 +111,10 @@ export default async function QuizDetailPage({
       </div>
 
       <QuizPlayButton quizId={quizData.quiz_id} title={quizData.title} />
+
+      {session.user?.user_id === quizData['user.user_id'] && (
+        <EditQuiz quizData={quizData} />
+      )}
     </>
   );
 }
