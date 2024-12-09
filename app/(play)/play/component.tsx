@@ -79,6 +79,7 @@ export default function PlayComponent() {
       setTorF('timeout');
     }
 
+    let lastTorF = TorF;
     setTorF((TorF) => {
       if (TorF === 'correct') {
         setScore(score + 100);
@@ -90,21 +91,23 @@ export default function PlayComponent() {
         setLife(life - 1);
       }
 
-      setQuiz((prev) => ({
-        ...prev,
-        score:
-          TorF === 'correct'
-            ? prev.score + 100
-            : TorF === 'wrong'
-              ? prev.score - 50
-              : prev.score - 30,
-        correctCount:
-          TorF === 'correct' ? prev.correctCount + 1 : prev.correctCount,
-        totalCount: questionNumber + 1,
-      }));
-
+      lastTorF = TorF;
       return TorF;
     });
+
+    let lastScore = score;
+    setScore((score) => {
+      lastScore = score;
+      return score;
+    });
+
+    setQuiz((prev) => ({
+      ...prev,
+      score: lastScore,
+      correctCount:
+        lastTorF === 'correct' ? prev.correctCount + 1 : prev.correctCount,
+      totalCount: questionNumber + 1,
+    }));
 
     // @ts-expect-error
     document.getElementById('explanation_modal')?.showModal();
