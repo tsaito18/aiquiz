@@ -5,7 +5,7 @@ export default function InvalidAccess({ mt }: { mt?: boolean }) {
     <div
       className={`flex flex-col items-center text-center gap-y-3 ${mt ? 'mt-10' : ''}`}
     >
-      <FaCircleExclamation className="size-10 text-red-500" />
+      <FaCircleExclamation className="size-10 text-error" />
       <p className="text-xl">
         無効なアクセスです。
         <br />

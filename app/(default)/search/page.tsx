@@ -35,9 +35,9 @@ export default async function SearchPage({
       <SearchField />
       <Index data={results} />
 
-      {!q && <p className="text-center">検索したいことばを入力してください</p>}
+      {!q && <p className="text-center">検索したいことばをいれてください</p>}
       {q && results.length === 0 && (
-        <p className="text-center">検索結果がありませんでした</p>
+        <p className="text-center">一致するクイズがありませんでした</p>
       )}
     </>
   );

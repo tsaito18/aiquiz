@@ -6,12 +6,13 @@ import { quizAtom } from '@/libs/atoms';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   FaArrowRight,
   FaBars,
   FaHeart,
   FaRegCircle,
+  FaRegClock,
   FaRegHeart,
   FaXmark,
 } from 'react-icons/fa6';
@@ -21,72 +22,107 @@ export default function PlayComponent() {
 
   const [quiz, setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
+
+  // 全体の状態
+  const [isInitialized, setIsInitialized] = useState(false);
+  const isLoading = useRef(false);
+  const generateCount = useRef(0);
+  const isMenuOpened = useRef(false);
   const [isEnded, setIsEnded] = useState(false);
 
+  // 残り時間
+  const [remainingTime, setRemainingTime] = useState(8000);
+  const timer = useRef<NodeJS.Timeout | null>(null);
+
   // 問題の状態
-  const [isLoading, setIsLoading] = useState(true);
-  const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
-  // ToDo: ↓
-  const [questions, setQuestions] = useState<Question[]>([]); /*
-    {
-      question:
-        'テストの質問ああああああああああああああああああああああああああああああああ',
-      answers: {
-        0: { text: '選択肢 1', isAnswer: true },
-        1: { text: '選択肢 2', isAnswer: false },
-        2: { text: '選択肢 3', isAnswer: false },
-        3: { text: '選択肢 4', isAnswer: false },
-      },
-      explanation: 'テストの解説',
-    },
-  */
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [score, setScore] = useState(0);
   const [life, setLife] = useState(3);
 
   // 設問ごとの状態
   const [questionNumber, setQuestionNumber] = useState(-1);
-  const [TorF, setTorF] = useState<boolean | null>(null);
+  const [TorF, setTorF] = useState<'correct' | 'wrong' | 'timeout' | null>(
+    null,
+  );
 
   async function generateQuestion() {
+    if (isLoading.current) return;
+    isLoading.current = true;
+
+    generateCount.current++;
+
     try {
-      const req = await fetch(`/api/quiz/generate?quiz_id=${quiz.quizId}`, {
-        // ToDo: ↓本番環境ではキャッシュを無効にする
-        // cache: 'no-store',
-      });
+      const req = await fetch(
+        `/api/quiz/generate?quiz_id=${quiz.quizId}&count=${generateCount}`,
+        { cache: 'no-store' },
+      );
       const res: Question[] = await req.json();
 
-      setQuestions([...questions, ...res]);
+      setQuestions((prev) => [...prev, ...res]);
     } catch (err) {
       console.error(err);
       alert(
-        '問題の取得に失敗しました。AI (Gemini API) の負荷が高いことが原因である可能性が高いです。しばらく待ってから再度お試しください。',
+        '問題の取得に失敗しました。AI (Gemini API) に負荷がかかりすぎている可能性が高いです。しばらく待ってから再度お試しください。',
       );
+    } finally {
+      isLoading.current = false;
     }
   }
 
-  function answerQuestion(number: number) {
-    const isCorrect =
-      questions[questionNumber].answers[number as 0 | 1 | 2 | 3].isAnswer;
-    setTorF(isCorrect);
+  function answerQuestion(number: -1 | 0 | 1 | 2 | 3) {
+    clearInterval(timer.current!);
 
-    if (isCorrect) {
-      setScore(score + 100);
+    if (number !== -1) {
+      const isCorrect = questions[questionNumber].answers[number].isAnswer;
+      setTorF(isCorrect ? 'correct' : 'wrong');
     } else {
-      setScore(score - 50);
-      setLife(life - 1);
+      setTorF('timeout');
     }
+
+    setTorF((TorF) => {
+      if (TorF === 'correct') {
+        setScore(score + 100);
+      } else if (TorF === 'wrong') {
+        setScore(score - 50);
+        setLife(life - 1);
+      } else {
+        setScore(score - 30);
+        setLife(life - 1);
+      }
+
+      return TorF;
+    });
 
     // @ts-expect-error
     document.getElementById('explanation_modal')?.showModal();
   }
 
-  function nextQuestion() {
+  async function nextQuestion() {
+    if (life <= 0) {
+      endQuiz();
+      return;
+    }
+
     setQuestionNumber(questionNumber + 1);
 
-    if (questions.length - (questionNumber + 1) <= 3 && !isBackgroundLoading) {
-      setIsBackgroundLoading(true);
-      generateQuestion().then(() => setIsBackgroundLoading(false));
+    if (questions.length - (questionNumber + 1) <= 3 && !isLoading.current) {
+      await generateQuestion();
     }
+
+    setRemainingTime(8000);
+    timer.current = setInterval(() => {
+      if (isMenuOpened.current) return;
+
+      setRemainingTime((prev) => prev - 10);
+
+      setRemainingTime((remainingTime) => {
+        if (remainingTime <= 0) {
+          answerQuestion(-1);
+        }
+
+        return remainingTime;
+      });
+    }, 10);
 
     // 1 文字ずつ表示する
   }
@@ -109,27 +145,32 @@ export default function PlayComponent() {
   }
 
   function openMenu() {
+    isMenuOpened.current = true;
     // @ts-expect-error
     document.getElementById('menu_modal')?.showModal();
   }
 
   function closeMenu() {
+    isMenuOpened.current = false;
     // @ts-expect-error
     document.getElementById('menu_modal')?.close();
   }
 
   useEffect(() => {
-    if (quiz.mode !== 'play' || !quiz.quizId || !quiz.title) return;
+    if (
+      quiz.mode !== 'play' ||
+      !quiz.quizId ||
+      !quiz.title ||
+      isInitialized ||
+      isLoading.current
+    )
+      return;
 
-    // ToDo: ↓消す
-    // nextQuestion();
-    // setIsLoading(false);
-
-    // ToDo: ↓
-    generateQuestion().then(() => {
-      nextQuestion();
-      setIsLoading(false);
-    });
+    async function init() {
+      await generateQuestion();
+      await nextQuestion();
+    }
+    init().then(() => setIsInitialized(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -143,7 +184,7 @@ export default function PlayComponent() {
     );
   }
 
-  if (isLoading) {
+  if (!isInitialized) {
     return (
       <div className="flex flex-col justify-center w-full h-svh items-center gap-y-3">
         <span className="loading loading-ring size-16" />
@@ -190,16 +231,20 @@ export default function PlayComponent() {
           </p>
         </div>
 
-        {/* ToDo: 時間制限を追加 */}
+        <progress
+          className="progress mt-5 progress-primary w-full"
+          value={remainingTime}
+          max="8000"
+        />
 
         {/* 回答ボタン */}
-        <div className="mt-5 flex w-full flex-col items-center gap-y-3">
+        <div className="mt-3 flex w-full flex-col items-center gap-y-3">
           {Object.values(questions[questionNumber].answers).map(
             (answer, index) => (
               <button
                 key={index}
                 className="btn btn-block h-auto py-3 text-2xl"
-                onClick={() => answerQuestion(index)}
+                onClick={() => answerQuestion(index as 0 | 1 | 2 | 3)}
               >
                 {answer.text}
               </button>
@@ -220,14 +265,23 @@ export default function PlayComponent() {
       >
         <div className="modal-box">
           <h3 className="mt-1 flex items-center justify-center gap-3 text-lg font-bold">
-            {TorF ? (
+            {TorF === 'correct' ? (
               <FaRegCircle className="size-8 text-green-500" />
-            ) : (
+            ) : TorF === 'wrong' ? (
               <FaXmark className="size-10 text-red-500" />
+            ) : (
+              <FaRegClock className="size-10 text-blue-500" />
             )}
-            <span className="text-3xl">{TorF ? '正解' : '不正解'}</span>
+            <span className="text-3xl">
+              {TorF === 'correct'
+                ? '正解'
+                : TorF === 'wrong'
+                  ? '不正解'
+                  : '時間切れ'}
+            </span>
           </h3>
           <p className="py-4">
+            正答:{' '}
             {
               Object.values(questions[questionNumber].answers).find(
                 (answer) => answer.isAnswer,
@@ -241,11 +295,18 @@ export default function PlayComponent() {
             <form method="dialog" className="w-full">
               <button
                 type="submit"
-                className="btn btn-block"
+                className="btn btn-primary btn-block"
                 onClick={nextQuestion}
+                disabled={typeof questions[questionNumber + 1] === 'undefined'}
               >
                 次の問題へ <FaArrowRight />
               </button>
+
+              {typeof questions[questionNumber + 1] === 'undefined' && (
+                <p className="text-gray-700 mt-2 text-center">
+                  次の問題を作成中です...
+                </p>
+              )}
             </form>
           </div>
         </div>
@@ -255,8 +316,10 @@ export default function PlayComponent() {
       <dialog id="menu_modal" className="modal">
         <form
           method="dialog"
-          className="w-full modal-box max-w-sm flex flex-col gap-y-3"
+          className="w-full pt-5 modal-box max-w-sm flex flex-col gap-y-3"
         >
+          <h2 className="text-center mb-2 font-bold text-2xl">メニュー</h2>
+
           <button
             type="submit"
             onClick={() => endQuiz()}
@@ -275,7 +338,7 @@ export default function PlayComponent() {
           <button
             type="submit"
             onClick={closeMenu}
-            className="btn btn-block mt-6"
+            className="btn btn-block btn-primary mt-6"
           >
             とじる
           </button>

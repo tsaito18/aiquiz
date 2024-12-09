@@ -10,13 +10,13 @@ export default function SearchField() {
   return (
     <form className="join mb-7 w-full">
       <input
-        className="input join-item input-bordered w-full"
+        className="input join-item input-primary input-bordered w-full"
         type="search"
         name="q"
-        placeholder="検索したいことばを入力..."
+        placeholder="検索したいことばをいれてください..."
         defaultValue={defaultQuery}
       />
-      <button type="submit" className="btn join-item">
+      <button type="submit" className="btn btn-primary join-item">
         <FaMagnifyingGlass className="h-4 w-4" />
         検索
       </button>

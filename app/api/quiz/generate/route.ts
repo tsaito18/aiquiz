@@ -2,12 +2,13 @@ import { db } from '@/database';
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const revalidate = 0;
-// export const revalidate = 3600;
+// export const revalidate = 0;
+export const revalidate = 3600;
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const searchParams = req.nextUrl.searchParams;
   const quizId = searchParams.get('quiz_id');
+  const count = Number(searchParams.get('count'));
 
   const quizData = await db
     .selectFrom('quizzes')
@@ -26,7 +27,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-flash',
     systemInstruction:
-      'あなたはプロのクイズ作問者です。\n今からクイズのトピックと難易度を指定するので、「クイズの質問、4つの選択肢、解説」のセットを5つ作成してください。\nなお、クイズの選択肢は10文字以内におさめてください。',
+      'あなたはプロのクイズ作問者です。\n' +
+      '今からクイズのトピックと難易度を指定するので、「クイズの質問、4つの選択肢、解説」のセットを5つ作成してください。\n' +
+      'なお、答えが複数できる質問やあいまいな質問は避け、クイズの選択肢は10文字以内におさめてください。\n\n' +
+      '「○○しやすい」や「○○と思われる」など、人によって受け取り方が変わるような主観的な問題も避けてください。\n\n' +
+      'また、クイズの質問は、他のクイズと被らないような独創的なものにしてください。',
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: {
@@ -83,6 +88,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const prompt = quizData.prompt;
 
-  const result = await model.generateContent(prompt);
+  const result = await model.generateContent(
+    prompt +
+      '\n\n' +
+      `上記のトピックのクイズの、${count * 10 - 9}問目から${count * 10}問目を、可能な限り問題が被ったり、似通った問題を生成しないように生成してください。`,
+  );
   return NextResponse.json(JSON.parse(result.response.text()));
 }

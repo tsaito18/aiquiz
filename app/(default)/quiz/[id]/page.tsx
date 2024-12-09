@@ -35,6 +35,7 @@ export default async function QuizDetailPage({
     ? await db
         .selectFrom('play_logs')
         .where('user_id', '=', session.user?.user_id!)
+        .where('quiz_id', '=', id)
         .select((eb) => [
           eb.fn.count('play_log_id').as('count'),
           eb.fn.max('score').as('max_score'),
@@ -83,7 +84,7 @@ export default async function QuizDetailPage({
           <h2 className="font-bold text-lg">自分のデータ</h2>
         </div>
         {session.isLoggedIn ? (
-          playLogs ? (
+          playLogs && playLogs?.count !== '0' ? (
             <div className="grid grid-cols-3">
               <div>
                 プレイ回数:{' '}

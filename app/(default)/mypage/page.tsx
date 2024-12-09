@@ -1,4 +1,5 @@
 import { signOut } from '@/auth';
+import LoginModal from '@/components/LoginModal';
 import QuizList from '@/components/QuizList';
 import { db } from '@/database';
 import { getSession } from '@/libs/auth';
@@ -6,6 +7,10 @@ import Image from 'next/image';
 
 export default async function MyPage() {
   const session = await getSession();
+
+  if (!session.isLoggedIn) {
+    return <LoginModal force />;
+  }
 
   const quizzes = await db
     .selectFrom('quizzes')
