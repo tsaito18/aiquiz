@@ -92,10 +92,15 @@ export default function PlayComponent() {
 
       setQuiz((prev) => ({
         ...prev,
-        score,
+        score:
+          TorF === 'correct'
+            ? prev.score + 100
+            : TorF === 'wrong'
+              ? prev.score - 50
+              : prev.score - 30,
         correctCount:
           TorF === 'correct' ? prev.correctCount + 1 : prev.correctCount,
-        totalCount: prev.totalCount + 1,
+        totalCount: questionNumber + 1,
       }));
 
       return TorF;
@@ -105,7 +110,7 @@ export default function PlayComponent() {
     document.getElementById('explanation_modal')?.showModal();
   }
 
-  async function nextQuestion() {
+  function nextQuestion() {
     if (life <= 0) {
       endQuiz();
       return;
@@ -114,7 +119,7 @@ export default function PlayComponent() {
     setQuestionNumber(questionNumber + 1);
 
     if (questions.length - (questionNumber + 1) <= 3 && !isLoading.current) {
-      await generateQuestion();
+      generateQuestion();
     }
 
     setRemainingTime(8000);
@@ -132,7 +137,7 @@ export default function PlayComponent() {
       });
     }, 10);
 
-    // 1 文字ずつ表示する
+    // ToDo: 1 文字ずつ表示する
   }
 
   function endQuiz(record = true) {
@@ -197,6 +202,7 @@ export default function PlayComponent() {
       <div className="flex flex-col justify-center w-full h-svh items-center gap-y-3">
         <span className="loading loading-ring size-16" />
         <p className="text-xl">問題を作成しています...</p>
+        <p className="text-gray-700 -mt-1">10 秒ほどかかる場合があります</p>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import { PlayStateAtom, QuizAtom } from '@/interfaces/atom';
+import { QuizAtom } from '@/interfaces/atom';
 import { atomWithReset } from 'jotai/utils';
 
 export const quizAtom = atomWithReset<QuizAtom>({
@@ -8,8 +8,4 @@ export const quizAtom = atomWithReset<QuizAtom>({
   score: 0,
   correctCount: 0,
   totalCount: 0,
-});
-
-export const playStateAtom = atomWithReset<PlayStateAtom>({
-  isLoading: false,
 });

@@ -6,7 +6,3 @@ export interface QuizAtom {
   correctCount: number;
   totalCount: number;
 }
-
-export interface PlayStateAtom {
-  isLoading: boolean;
-}
