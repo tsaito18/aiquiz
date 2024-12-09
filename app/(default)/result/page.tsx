@@ -60,7 +60,8 @@ export default function ResultPage() {
       },
       body: JSON.stringify({
         quiz_id: quiz.quizId,
-        score: quiz.score,
+        // ↓ 不具合対応のため -50 する
+        score: quiz.score - 50,
         correct_count: quiz.correctCount,
         total_count: quiz.totalCount,
       }),
@@ -92,7 +93,8 @@ export default function ResultPage() {
 
       <div className="bg-amber-100 mb-2 text-center py-5 w-full max-w-md rounded-lg">
         <h2 className="mb-2">スコア</h2>
-        <span className="font-bold text-3xl">{quiz.score}</span>
+        {/* ↓ 不具合対応のため -50 する */}
+        <span className="font-bold text-3xl">{quiz.score - 50}</span>
       </div>
 
       <div className="bg-amber-100 text-center py-5 w-full max-w-md rounded-lg">
