@@ -6,14 +6,14 @@ import { quizAtom } from '@/libs/atoms';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FaXTwitter } from 'react-icons/fa6';
 
 export default function ResultPage() {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const [quiz, setQuiz] = useAtom(quizAtom);
+  // eslint-disable-next-line no-unused-vars
+  const [quiz, _setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
 
   const [isSent, setIsSent] = useState(false);
@@ -41,20 +41,6 @@ export default function ResultPage() {
   //
   //   router.push('/play');
   // }
-
-  function playAgain() {
-    resetQuiz();
-    setQuiz({
-      quizId: quiz.quizId,
-      title: quiz.title,
-      mode: 'play',
-      score: 0,
-      correctCount: 0,
-      totalCount: 0,
-    });
-
-    router.push('/play');
-  }
 
   useEffect(() => {
     if (
