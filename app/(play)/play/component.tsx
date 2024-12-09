@@ -122,6 +122,11 @@ export default function PlayComponent() {
       generateQuestion();
     }
 
+    if (timer.current) {
+      clearInterval(timer.current);
+      timer.current = null;
+    }
+
     setRemainingTime(8000);
     timer.current = setInterval(() => {
       if (isMenuOpened.current) return;
@@ -181,7 +186,7 @@ export default function PlayComponent() {
 
     async function init() {
       await generateQuestion();
-      await nextQuestion();
+      nextQuestion();
     }
     init().then(() => setIsInitialized(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
