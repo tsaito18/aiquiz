@@ -6,14 +6,14 @@ export default function Footer() {
       name: 'ホーム',
       to: '/',
     },
-    {
-      name: '利用規約',
-      to: '/terms',
-    },
-    {
-      name: 'プライバシーポリシー',
-      to: '/privacy',
-    },
+    // {
+    //   name: '利用規約',
+    //   to: '/terms',
+    // },
+    // {
+    //   name: 'プライバシーポリシー',
+    //   to: '/privacy',
+    // },
   ];
 
   return (

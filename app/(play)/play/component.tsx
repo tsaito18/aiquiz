@@ -90,6 +90,14 @@ export default function PlayComponent() {
         setLife(life - 1);
       }
 
+      setQuiz((prev) => ({
+        ...prev,
+        score,
+        correctCount:
+          TorF === 'correct' ? prev.correctCount + 1 : prev.correctCount,
+        totalCount: prev.totalCount + 1,
+      }));
+
       return TorF;
     });
 

@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ResultPage() {
   const router = useRouter();
@@ -14,7 +14,9 @@ export default function ResultPage() {
   const [quiz, setQuiz] = useAtom(quizAtom);
   const resetQuiz = useResetAtom(quizAtom);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isSent, setIsSent] = useState(false);
+  const isLoading = useRef(false);
+  const preparePlayAgain = useRef(false);
 
   function playAgain() {
     const quizId = quiz.quizId;
@@ -22,12 +24,21 @@ export default function ResultPage() {
 
     resetQuiz();
     setQuiz((prev) => ({ ...prev, quizId, title, mode: 'play' }));
+    preparePlayAgain.current = true;
 
     router.push('/play');
   }
 
   useEffect(() => {
-    if (quiz.mode !== 'result' || !quiz.quizId || !quiz.title) return;
+    if (
+      quiz.mode !== 'result' ||
+      !quiz.quizId ||
+      !quiz.title ||
+      isLoading.current
+    )
+      return;
+
+    isLoading.current = true;
 
     fetch('/api/quiz/record', {
       method: 'POST',
@@ -45,12 +56,18 @@ export default function ResultPage() {
         console.error(err);
       })
       .finally(() => {
-        setIsLoading(false);
+        isLoading.current = false;
+        setIsSent(true);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (quiz.mode !== 'result' || !quiz.quizId || !quiz.title) {
+  if (
+    quiz.mode !== 'result' ||
+    !quiz.quizId ||
+    !quiz.title ||
+    !preparePlayAgain
+  ) {
     resetQuiz();
     return <InvalidAccess mt />;
   }
@@ -78,16 +95,17 @@ export default function ResultPage() {
       {/* ToDo: シェアボタン */}
 
       <div className="flex flex-col gap-y-3 mt-6 w-full max-w-sm">
+        {/* ToDo: ↓ 直す */}
         <button
           onClick={playAgain}
-          disabled={isLoading}
+          disabled={!isSent}
           className="btn btn-primary btn-block"
         >
           もういちど遊ぶ
         </button>
         <Link
           href={`/quiz/${quiz.quizId}`}
-          className={`btn btn-block ${isLoading ? 'btn-disabled' : ''}`}
+          className={`btn btn-block ${!isSent ? 'btn-disabled' : ''}`}
         >
           もどる
         </Link>
