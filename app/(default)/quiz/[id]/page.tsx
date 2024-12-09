@@ -1,6 +1,6 @@
 import EditQuiz from '@/app/(default)/quiz/[id]/EditQuiz';
+import QuizPlayButton from '@/app/(default)/quiz/[id]/QuizPlayButton';
 import CopyButton from '@/components/CopyButton';
-import QuizPlayButton from '@/components/QuizPlayButton';
 import { db } from '@/database';
 import { getSession } from '@/libs/auth';
 import { notFound } from 'next/navigation';
@@ -79,7 +79,7 @@ export default async function QuizDetailPage({
         </div>
       </div>
 
-      <div className="w-full py-2 max-w-lg mx-auto mt-10 mb-5 px-4 rounded-lg bg-blue-50">
+      <div className="w-full py-2 mx-auto mt-10 mb-5 px-4 rounded-lg bg-blue-50">
         <div className="flex items-center gap-x-2">
           <FaArrowTrendUp className="size-6 text-blue-500" />
           <h2 className="font-bold text-lg">自分のデータ</h2>

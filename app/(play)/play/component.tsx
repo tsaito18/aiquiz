@@ -21,6 +21,7 @@ export default function PlayComponent() {
   const router = useRouter();
 
   const [quiz, setQuiz] = useAtom(quizAtom);
+  console.log(quiz);
   const resetQuiz = useResetAtom(quizAtom);
 
   // 全体の状態

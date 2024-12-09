@@ -1,5 +1,6 @@
 'use client';
 
+import CopyButton from '@/components/CopyButton';
 import InvalidAccess from '@/components/InvalidAccess';
 import { quizAtom } from '@/libs/atoms';
 import { useAtom } from 'jotai';
@@ -7,6 +8,7 @@ import { useResetAtom } from 'jotai/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { FaXTwitter } from 'react-icons/fa6';
 
 export default function ResultPage() {
   const router = useRouter();
@@ -18,13 +20,38 @@ export default function ResultPage() {
   const isLoading = useRef(false);
   const preparePlayAgain = useRef(false);
 
-  function playAgain() {
-    const quizId = quiz.quizId;
-    const title = quiz.title;
+  // function playAgain() {
+  //   // preparePlayAgain.current = true;
+  //   const quizId = quiz.quizId;
+  //   const title = quiz.title;
+  //
+  //   console.log('bq', quiz);
+  //   resetQuiz();
+  //   setQuiz((prev) => ({
+  //     ...prev,
+  //     quizId,
+  //     title,
+  //     mode: 'play',
+  //   }));
+  //
+  //   setQuiz((prev) => {
+  //     console.log('aq', prev);
+  //     return prev;
+  //   });
+  //
+  //   router.push('/play');
+  // }
 
+  function playAgain() {
     resetQuiz();
-    setQuiz((prev) => ({ ...prev, quizId, title, mode: 'play' }));
-    preparePlayAgain.current = true;
+    setQuiz({
+      quizId: quiz.quizId,
+      title: quiz.title,
+      mode: 'play',
+      score: 0,
+      correctCount: 0,
+      totalCount: 0,
+    });
 
     router.push('/play');
   }
@@ -92,20 +119,32 @@ export default function ResultPage() {
 
       {/* ToDo: ここに AI からの講評とかを入れてもいいかも？ */}
 
-      {/* ToDo: シェアボタン */}
+      <div className="flex gap-2 mt-4">
+        <a
+          href={`https://x.com/intent/tweet?text=${encodeURIComponent(`${quiz.title} | チャレンジAIクイズ`)}&url=${encodeURIComponent(`https://aiquiz.taigasaito.org/quiz/${quiz.quizId}`)}`}
+          target="_blank"
+          className="btn"
+        >
+          <FaXTwitter />
+          ポスト
+        </a>
+        <CopyButton
+          text={`https://aiquiz.taigasaito.org/quiz/${quiz.quizId}`}
+        />
+      </div>
 
       <div className="flex flex-col gap-y-3 mt-6 w-full max-w-sm">
         {/* ToDo: ↓ 直す */}
-        <button
-          onClick={playAgain}
-          disabled={!isSent}
-          className="btn btn-primary btn-block"
-        >
-          もういちど遊ぶ
-        </button>
+        {/*<button*/}
+        {/*  onClick={playAgain}*/}
+        {/*  disabled={!isSent}*/}
+        {/*  className="btn btn-primary btn-block"*/}
+        {/*>*/}
+        {/*  もういちど遊ぶ*/}
+        {/*</button>*/}
         <Link
           href={`/quiz/${quiz.quizId}`}
-          className={`btn btn-block ${!isSent ? 'btn-disabled' : ''}`}
+          className={`btn btn-primary btn-block ${!isSent ? 'btn-disabled' : ''}`}
         >
           もどる
         </Link>
