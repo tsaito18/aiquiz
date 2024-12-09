@@ -1,9 +1,11 @@
 'use client';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FormEventHandler } from 'react';
 
 export default function CreateQuizComponent() {
+  const router = useRouter();
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
@@ -21,7 +23,7 @@ export default function CreateQuizComponent() {
     });
     const res = await req.json();
 
-    redirect(`/quiz/${res.quiz_id}`);
+    router.push(`/quiz/${res.quiz_id}`);
   };
 
   return (

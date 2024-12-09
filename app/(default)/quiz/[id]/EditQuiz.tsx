@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FaCheck, FaPen } from 'react-icons/fa6';
+import { FaCheck, FaPen, FaTrash } from 'react-icons/fa6';
 
 export default function EditQuiz({
   quizData,
@@ -21,11 +21,12 @@ export default function EditQuiz({
   const [quizDescription, setQuizDescription] = useState(quizData.description);
   const [quizPrompt, setQuizPrompt] = useState(quizData.prompt);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   function editQuiz() {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (isEditLoading) return;
+    setIsEditLoading(true);
 
     fetch('/api/quiz/edit', {
       method: 'PUT',
@@ -53,7 +54,43 @@ export default function EditQuiz({
         console.error(err);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsEditLoading(false);
+      });
+  }
+
+  function deleteQuiz() {
+    if (isDeleteLoading) return;
+    if (
+      !confirm(
+        '本当にこのクイズを削除しますか？\n一度削除したクイズは復元できません。',
+      )
+    )
+      return;
+
+    setIsDeleteLoading(true);
+
+    fetch('/api/quiz/delete', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quiz_id: quizData.quiz_id,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          location.href = '/mypage';
+        } else {
+          alert('クイズを削除できませんでした。');
+          throw new Error('Failed to delete quiz');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setIsDeleteLoading(false);
       });
   }
 
@@ -131,14 +168,31 @@ export default function EditQuiz({
             </div>
           </div>
 
-          <div className="modal-action">
+          <div className="modal-action justify-between">
+            <button
+              type="button"
+              onClick={deleteQuiz}
+              className="btn btn-error"
+              disabled={isEditLoading || isDeleteLoading}
+            >
+              {!isDeleteLoading ? (
+                <>
+                  <FaTrash /> クイズを削除
+                </>
+              ) : (
+                <>
+                  <span className="loading loading-spinner loading-md" />{' '}
+                  削除しています...
+                </>
+              )}
+            </button>
             <button
               type="button"
               onClick={editQuiz}
               className="btn btn-primary"
-              disabled={isLoading}
+              disabled={isEditLoading || isDeleteLoading}
             >
-              {!isLoading ? (
+              {!isEditLoading ? (
                 <>
                   <FaCheck /> 変更を確定
                 </>
