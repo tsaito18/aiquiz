@@ -1,3 +1,4 @@
+import EditUserInfo from '@/app/(default)/mypage/EditUserInfo';
 import { signOut } from '@/auth';
 import LoginModal from '@/components/LoginModal';
 import QuizList from '@/components/QuizList';
@@ -31,10 +32,11 @@ export default async function MyPage() {
           height={100}
           className="rounded-full"
         />
-        <div>
+        <div className="w-full">
           <p className="font-bold text-2xl">{session.user?.name}</p>
           <p className="text-gray-700">{session.user?.email}</p>
         </div>
+        <EditUserInfo session={session} />
       </div>
       <p className="text-sm mb-5 text-gray-700 text-center mt-2">
         ※名前以外の情報は公開されません
