@@ -3,6 +3,7 @@ import QuizPlayButton from '@/app/(default)/quiz/[id]/QuizPlayButton';
 import CopyButton from '@/components/CopyButton';
 import { db } from '@/database';
 import { getSession } from '@/libs/auth';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { FaArrowTrendUp, FaPlay, FaXTwitter } from 'react-icons/fa6';
 
@@ -53,7 +54,16 @@ export default async function QuizDetailPage({
     <>
       <div className="flex h-[30svh] flex-col w-full items-center justify-center rounded-md bg-amber-100">
         <h1 className="text-3xl font-bold">{quizData.title}</h1>
-        <p className="text-gray-700 mt-1">by {quizData['user.name']}</p>
+        <div className="text-gray-700 flex gap-1 mt-2">
+          <Image
+            src={quizData['user.avatar']!}
+            alt={`${quizData['user.name']} さんのアバター`}
+            width={50}
+            height={50}
+            className="rounded-full size-6"
+          />
+          {quizData['user.name']}
+        </div>
 
         <div className="flex mt-3 gap-1 items-center text-gray-700">
           <FaPlay className="size-3" /> {quizData.play_count}{' '}
