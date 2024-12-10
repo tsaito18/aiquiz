@@ -17,9 +17,46 @@ export async function POST(req: NextRequest) {
   }
 
   const { title, description, prompt } = await req.json();
-  if (!title || !description || !prompt) {
+  if (
+    !title ||
+    typeof title !== 'string' ||
+    title.length < 3 ||
+    title.length > 32
+  ) {
     return NextResponse.json(
-      { success: false, error: 'title, description, prompt は必須です。' },
+      {
+        success: false,
+        error: 'title は 3 文字以上 32 文字以下の文字列でないといけません。',
+      },
+      { status: 400 },
+    );
+  }
+  if (
+    description &&
+    (typeof description !== 'string' ||
+      description.length < 3 ||
+      description.length > 128)
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          'description を指定する場合は 3 文字以上 128 文字以下の文字列でないといけません。',
+      },
+      { status: 400 },
+    );
+  }
+  if (
+    !prompt ||
+    typeof prompt !== 'string' ||
+    prompt.length < 3 ||
+    prompt.length > 512
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'prompt は 3 文字以上 512 文字以下の文字列でないといけません。',
+      },
       { status: 400 },
     );
   }
