@@ -54,7 +54,7 @@ export default async function QuizDetailPage({
     <>
       <div className="flex h-[30svh] flex-col w-full items-center justify-center rounded-md bg-amber-100">
         <h1 className="text-3xl font-bold">{quizData.title}</h1>
-        <div className="text-gray-700 flex gap-1 mt-2">
+        <div className="text-gray-700 flex gap-2 mt-2">
           <Image
             src={quizData['user.avatar']!}
             alt={`${quizData['user.name']} さんのアバター`}
