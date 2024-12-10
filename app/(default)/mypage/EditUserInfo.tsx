@@ -130,7 +130,9 @@ export default function EditUserInfo({ session }: { session: Session }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <span className="text-gray-700">アバター画像</span>
+              <span className="text-gray-700">
+                アバター画像 <span className="text-red-500">*</span>
+              </span>
               <input
                 id="avatar"
                 type="file"
@@ -145,6 +147,7 @@ export default function EditUserInfo({ session }: { session: Session }) {
                   uploadAvatar(e.target.files[0]);
                 }}
                 className="file-input file-input-primary file-input-bordered w-full"
+                required
               />
               <input
                 type="text"
