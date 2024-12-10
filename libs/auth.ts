@@ -26,7 +26,9 @@ export const getSession = cache(async (): Promise<Session> => {
         .values({
           user_id: crypto.randomUUID(),
           name: session.user.name || '名無しさん',
-          avatar: session.user.image || '',
+          avatar:
+            session.user.image ||
+            'https://aiquiz-r2.taigasaito.org/default.webp',
           google_id: session.user.googleId,
           email: session.user.email || '',
         })

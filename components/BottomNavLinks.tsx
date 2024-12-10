@@ -2,6 +2,7 @@
 
 import { links } from '@/components/Header';
 import type { Session } from '@/interfaces/session';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -33,13 +34,12 @@ export default function BottomNavLinks({ session }: { session: Session }) {
           href="/mypage"
           className={path === '/mypage' ? 'active bg-base-200' : ''}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={session.user?.avatar!}
             alt="ユーザーのプロフィール画像"
-            width={20}
-            height={20}
-            className="rounded-full"
+            width={50}
+            height={50}
+            className="size-5 rounded-full"
           />
           <span className="btm-nav-label text-sm text-gray-600">
             マイページ

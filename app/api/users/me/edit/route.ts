@@ -16,7 +16,7 @@ export async function PUT(request: NextRequest) {
     );
   }
 
-  const { name } = await request.json();
+  const { name, avatar } = await request.json();
   if (
     !name ||
     typeof name !== 'string' ||
@@ -31,10 +31,26 @@ export async function PUT(request: NextRequest) {
       { status: 400 },
     );
   }
+  if (
+    avatar &&
+    (typeof avatar !== 'string' ||
+      avatar.length < 7 ||
+      avatar.length > 512 ||
+      !avatar.startsWith('https://'))
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          'avatar を指定する場合は 7 文字以上 512 文字以下の、https:// から始まる文字列でないといけません。',
+      },
+      { status: 400 },
+    );
+  }
 
   await db
     .updateTable('users')
-    .set('name', name)
+    .set({ name, avatar })
     .where('user_id', '=', session.user?.user_id!)
     .execute();
 

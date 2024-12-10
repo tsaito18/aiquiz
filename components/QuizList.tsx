@@ -22,6 +22,7 @@ export default function QuizList({
           title={quiz.title}
           description={quiz.description || '説明がありません'}
           createdBy={quiz['user.name'] || 'Unknown'}
+          userAvatar={quiz['user.avatar']!}
           quizId={quiz.quiz_id}
           hideCreatedBy={hideCreatedBy}
         />

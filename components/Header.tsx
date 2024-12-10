@@ -54,13 +54,12 @@ export default async function Header() {
 
           {session ? (
             <Link href="/mypage" className="btn btn-ghost">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={session.user?.image!}
                 alt="ユーザー画像"
-                width={24}
-                height={24}
-                className="rounded-full"
+                width={50}
+                height={50}
+                className="rounded-full size-5"
               />
               <span className="text-base font-normal">マイページ</span>
             </Link>
