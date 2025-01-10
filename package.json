@@ -14,7 +14,7 @@
     "lintfix": "pnpm lint:eslint --fix && pnpm lint:prettier --write --list-different"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.705.0",
+    "@aws-sdk/client-s3": "3.726.1",
     "@google/generative-ai": "0.21.0",
     "@vercel/postgres-kysely": "0.10.0",
     "jotai": "2.11.0",
