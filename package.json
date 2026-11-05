@@ -34,7 +34,7 @@
     "daisyui": "4.12.20",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.23",
-    "eslint-config-prettier": "9.1.0",
+    "eslint-config-prettier": "10.1.8",
     "kysely-ctl": "0.10.1",
     "postcss": "8.4.49",
     "prettier": "3.4.2",
